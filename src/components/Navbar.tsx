@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useIncompleteTaskCount } from "@/lib/use-incomplete-count";
 import { Avatar } from "./Avatar";
+import { HelmIcon } from "./icons";
 
 export function Navbar() {
   const { user, logOut } = useAuth();
@@ -12,9 +13,10 @@ export function Navbar() {
   const incompleteCount = useIncompleteTaskCount(user?.email);
 
   return (
-    <header className="border-b border-violet-100 bg-white/80 backdrop-blur">
+    <header className="border-b border-blue-100 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/dashboard" className="font-semibold text-violet-950">
+        <Link href="/dashboard" className="flex items-center gap-1.5 font-semibold text-blue-950">
+          <HelmIcon className="h-5 w-5" />
           Waypoint
         </Link>
         {user && (
@@ -25,11 +27,11 @@ export function Navbar() {
             </span>
             <Link
               href="/my-tasks"
-              className="flex items-center gap-1.5 hover:text-violet-700 hover:underline"
+              className="flex items-center gap-1.5 hover:text-blue-700 hover:underline"
             >
               My Tasks
               {incompleteCount > 0 && (
-                <span className="rounded-full bg-violet-600 px-1.5 py-0.5 text-[11px] font-semibold text-white">
+                <span className="rounded-full bg-blue-600 px-1.5 py-0.5 text-[11px] font-semibold text-white">
                   {incompleteCount}
                 </span>
               )}

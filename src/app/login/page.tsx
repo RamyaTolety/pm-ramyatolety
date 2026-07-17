@@ -4,11 +4,12 @@ import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { AnchorIcon, SailboatIcon, WavesIcon } from "@/components/icons";
 
 const ROUTE_STEPS = [
-  { label: "Plan the route", detail: "Spin up a project, invite your crew" },
-  { label: "Ship the legs", detail: "Break work into tasks, track the course" },
-  { label: "Log the voyage", detail: "Every finished task is a waypoint reached" },
+  { label: "Plan the route", detail: "Spin up a project, invite your crew", Icon: AnchorIcon },
+  { label: "Ship the legs", detail: "Break work into tasks, track the course", Icon: SailboatIcon },
+  { label: "Log the voyage", detail: "Every finished task is a waypoint reached", Icon: WavesIcon },
 ];
 
 export default function LoginPage() {
@@ -43,8 +44,9 @@ export default function LoginPage() {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-10 px-4 py-12 md:flex-row md:items-stretch md:gap-16">
       <div className="animate-fade-in-up flex max-w-md flex-col justify-center text-center md:text-left">
-        <p className="text-xs font-semibold uppercase tracking-widest text-violet-500">Waypoint</p>
-        <h1 className="mt-2 text-3xl font-bold leading-tight text-violet-950 sm:text-4xl">
+        <SailboatIcon className="mx-auto h-10 w-10 text-blue-400 md:mx-0" />
+        <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-blue-500">Waypoint</p>
+        <h1 className="mt-2 text-3xl font-bold leading-tight text-blue-950 sm:text-4xl">
           Chart the course.
           <br />
           Ship the work.
@@ -54,16 +56,20 @@ export default function LoginPage() {
           together — Waypoint keeps the course clear.
         </p>
 
-        <ol className="mt-8 space-y-4 border-l border-violet-200 pl-5 text-left">
+        <ol className="mt-8 space-y-5 text-left">
           {ROUTE_STEPS.map((step, i) => (
             <li
               key={step.label}
-              className="animate-fade-in-up relative"
+              className="animate-fade-in-up flex items-start gap-3"
               style={{ animationDelay: `${i * 0.12}s` }}
             >
-              <span className="absolute -left-[26px] top-1 h-2.5 w-2.5 rounded-full bg-violet-400" />
-              <p className="text-sm font-semibold text-violet-950">{step.label}</p>
-              <p className="text-xs text-neutral-500">{step.detail}</p>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                <step.Icon className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-blue-950">{step.label}</p>
+                <p className="text-xs text-neutral-500">{step.detail}</p>
+              </div>
             </li>
           ))}
         </ol>
@@ -71,7 +77,7 @@ export default function LoginPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="animate-fade-in-up w-full max-w-sm space-y-4 self-center rounded-xl border border-violet-100 bg-white p-6 shadow-lg shadow-violet-200/40"
+        className="animate-fade-in-up w-full max-w-sm space-y-4 self-center rounded-xl border border-blue-100 bg-white p-6 shadow-lg shadow-blue-200/40"
         style={{ animationDelay: "0.2s" }}
       >
         <h2 className="text-lg font-semibold">
@@ -85,7 +91,7 @@ export default function LoginPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
           />
         </div>
 
@@ -97,7 +103,7 @@ export default function LoginPage() {
             minLength={6}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
           />
         </div>
 
@@ -106,7 +112,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-md bg-violet-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-violet-700 hover:shadow-md disabled:opacity-50"
+          className="w-full rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700 hover:shadow-md disabled:opacity-50"
         >
           {submitting ? "Please wait…" : mode === "login" ? "Log in" : "Sign up"}
         </button>
@@ -114,7 +120,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => setMode(mode === "login" ? "signup" : "login")}
-          className="w-full text-center text-sm text-neutral-600 hover:text-violet-700 hover:underline"
+          className="w-full text-center text-sm text-neutral-600 hover:text-blue-700 hover:underline"
         >
           {mode === "login" ? "Need an account? Sign up" : "Already have an account? Log in"}
         </button>

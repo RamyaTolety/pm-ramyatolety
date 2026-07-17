@@ -42,12 +42,12 @@ export function TaskComments({ projectId, taskId }: { projectId: string; taskId:
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Add a comment…"
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
         />
         <button
           type="submit"
           disabled={submitting || !text.trim()}
-          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-violet-50 hover:text-violet-700 disabled:opacity-50"
+          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50"
         >
           Send
         </button>

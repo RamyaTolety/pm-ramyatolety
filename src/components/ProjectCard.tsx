@@ -33,7 +33,7 @@ export function ProjectCard({ project }: { project: Project }) {
   }
 
   return (
-    <div className="animate-fade-in-up space-y-3 rounded-xl border border-violet-100 bg-white p-4 shadow-sm shadow-violet-100/40 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-violet-100/60">
+    <div className="animate-fade-in-up space-y-3 rounded-xl border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100/40 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-100/60">
       <div className="flex items-start justify-between">
         {editing ? (
           <form onSubmit={handleSaveEdit} className="flex-1 space-y-2 pr-2">
@@ -52,7 +52,7 @@ export function ProjectCard({ project }: { project: Project }) {
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="rounded-md bg-violet-600 px-2 py-1 text-xs font-medium text-white hover:bg-violet-700"
+                className="rounded-md bg-blue-600 px-2 py-1 text-xs font-medium text-white hover:bg-blue-700"
               >
                 Save
               </button>
@@ -73,7 +73,7 @@ export function ProjectCard({ project }: { project: Project }) {
           <div>
             <Link
               href={`/projects/${project.id}`}
-              className="font-semibold text-violet-950 hover:text-violet-700 hover:underline"
+              className="font-semibold text-blue-950 hover:text-blue-700 hover:underline"
             >
               {project.name}
             </Link>
@@ -87,13 +87,13 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="flex shrink-0 gap-2">
             <button
               onClick={() => setEditing(true)}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-violet-50 hover:text-violet-700"
+              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700"
             >
               Edit
             </button>
             <button
               onClick={() => updateProject(project.id, { archived: !project.archived })}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-violet-50 hover:text-violet-700"
+              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700"
             >
               {project.archived ? "Unarchive" : "Archive"}
             </button>
@@ -103,9 +103,9 @@ export function ProjectCard({ project }: { project: Project }) {
 
       {tasks.length > 0 && (
         <div className="space-y-1">
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-violet-100">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-blue-100">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-400 transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -127,11 +127,11 @@ export function ProjectCard({ project }: { project: Project }) {
           placeholder="Add member by email"
           value={memberEmail}
           onChange={(e) => setMemberEmail(e.target.value)}
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
         />
         <button
           type="submit"
-          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-violet-50 hover:text-violet-700"
+          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700"
         >
           Add
         </button>

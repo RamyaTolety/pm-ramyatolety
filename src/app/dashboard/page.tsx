@@ -29,7 +29,7 @@ function DashboardContent() {
       <FocusCard focusTask={focusTask} shippedThisWeek={shippedThisWeek} />
 
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-violet-950">Your projects</h1>
+        <h1 className="text-2xl font-bold text-blue-950">Your projects</h1>
         <NewProjectForm />
       </div>
 
@@ -43,7 +43,7 @@ function DashboardContent() {
       </label>
 
       {visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-violet-200 bg-violet-50/40 p-8 text-center">
+        <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center">
           <p className="text-sm text-neutral-600">
             {showArchived
               ? "No archived projects — anything you archive shows up here."

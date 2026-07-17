@@ -95,16 +95,16 @@ function InsightsContent({ projectId }: { projectId: string }) {
       <div>
         <Link
           href={`/projects/${projectId}`}
-          className="text-sm text-violet-600 hover:underline"
+          className="text-sm text-blue-600 hover:underline"
         >
           ← Back to board
         </Link>
-        <h1 className="mt-1 text-2xl font-bold text-violet-950">
+        <h1 className="mt-1 text-2xl font-bold text-blue-950">
           {project.name} · Insights
         </h1>
       </div>
 
-      <div className="flex items-center gap-3 rounded-xl border border-violet-100 bg-white p-4">
+      <div className="flex items-center gap-3 rounded-xl border border-blue-100 bg-white p-4">
         <span className={`rounded-full px-3 py-1 text-sm font-semibold ${conditions.classes}`}>
           {conditions.label}
         </span>
@@ -112,32 +112,32 @@ function InsightsContent({ projectId }: { projectId: string }) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-violet-100 bg-white p-4">
-          <p className="text-2xl font-bold text-violet-950">{tasks.length}</p>
+        <div className="rounded-xl border border-blue-100 bg-white p-4">
+          <p className="text-2xl font-bold text-blue-950">{tasks.length}</p>
           <p className="text-xs text-neutral-500">total tasks</p>
         </div>
-        <div className="rounded-xl border border-violet-100 bg-white p-4">
-          <p className="text-2xl font-bold text-violet-950">
+        <div className="rounded-xl border border-blue-100 bg-white p-4">
+          <p className="text-2xl font-bold text-blue-950">
             {tasks.filter((t) => t.status === "done").length}
           </p>
           <p className="text-xs text-neutral-500">completed</p>
         </div>
-        <div className="rounded-xl border border-violet-100 bg-white p-4">
-          <p className="text-2xl font-bold text-violet-950">
+        <div className="rounded-xl border border-blue-100 bg-white p-4">
+          <p className="text-2xl font-bold text-blue-950">
             {avgCycleTimeHours === null ? "—" : `${avgCycleTimeHours.toFixed(1)}h`}
           </p>
           <p className="text-xs text-neutral-500">avg. cycle time</p>
         </div>
       </div>
 
-      <div className="rounded-xl border border-violet-100 bg-white p-5">
+      <div className="rounded-xl border border-blue-100 bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold text-neutral-700">Completed, last 7 days</h2>
         <div className="flex h-32 items-end gap-3">
           {dailyCompleted.map((day) => (
             <div key={day.label} className="flex flex-1 flex-col items-center gap-1">
               <div className="flex h-24 w-full items-end">
                 <div
-                  className="w-full rounded-t-md bg-gradient-to-t from-violet-500 to-fuchsia-400"
+                  className="w-full rounded-t-md bg-gradient-to-t from-blue-500 to-cyan-400"
                   style={{ height: `${(day.count / maxDaily) * 100}%`, minHeight: day.count ? 4 : 0 }}
                 />
               </div>
@@ -148,7 +148,7 @@ function InsightsContent({ projectId }: { projectId: string }) {
         </div>
       </div>
 
-      <div className="rounded-xl border border-violet-100 bg-white p-5">
+      <div className="rounded-xl border border-blue-100 bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold text-neutral-700">By assignee</h2>
         {byAssignee.length === 0 ? (
           <p className="text-sm text-neutral-400">No tasks yet.</p>
@@ -159,7 +159,7 @@ function InsightsContent({ projectId }: { projectId: string }) {
                 <span className="w-48 truncate text-neutral-700">{email}</span>
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-100">
                   <div
-                    className="h-full rounded-full bg-violet-500"
+                    className="h-full rounded-full bg-blue-500"
                     style={{ width: `${(stats.done / stats.total) * 100}%` }}
                   />
                 </div>

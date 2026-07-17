@@ -83,7 +83,7 @@ export function TaskCard({
       <select
         value={task.status}
         onChange={(e) => handleStatusChange(e.target.value as TaskStatus)}
-        className="w-full rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+        className="w-full rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
       >
         {TASK_STATUSES.map((s) => (
           <option key={s.value} value={s.value}>
@@ -95,13 +95,13 @@ export function TaskCard({
       <div className="flex gap-3">
         <button
           onClick={() => setShowChecklist((v) => !v)}
-          className="text-[11px] text-neutral-400 hover:text-violet-600"
+          className="text-[11px] text-neutral-400 hover:text-blue-600"
         >
           {showChecklist ? "Hide checklist" : "Checklist"}
         </button>
         <button
           onClick={() => setShowComments((v) => !v)}
-          className="text-[11px] text-neutral-400 hover:text-violet-600"
+          className="text-[11px] text-neutral-400 hover:text-blue-600"
         >
           {showComments ? "Hide comments" : "Comments"}
         </button>

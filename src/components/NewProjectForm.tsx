@@ -49,7 +49,7 @@ export function NewProjectForm() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-700"
+        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
       >
         + New project
       </button>
@@ -86,7 +86,7 @@ export function NewProjectForm() {
               title={t.description}
               className={`rounded-md border px-2.5 py-1 text-xs ${
                 template === t.value
-                  ? "border-violet-400 bg-violet-50 text-violet-700"
+                  ? "border-blue-400 bg-blue-50 text-blue-700"
                   : "border-neutral-300 text-neutral-500"
               }`}
             >
@@ -99,7 +99,7 @@ export function NewProjectForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-md bg-violet-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-violet-700 disabled:opacity-50"
+          className="rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
         >
           Create
         </button>

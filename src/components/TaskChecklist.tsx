@@ -31,7 +31,7 @@ export function TaskChecklist({ projectId, taskId }: { projectId: string; taskId
         <div className="space-y-1">
           <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-100">
             <div
-              className="h-full rounded-full bg-violet-500 transition-all"
+              className="h-full rounded-full bg-blue-500 transition-all"
               style={{ width: `${(doneCount / items.length) * 100}%` }}
             />
           </div>
@@ -57,12 +57,12 @@ export function TaskChecklist({ projectId, taskId }: { projectId: string; taskId
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Add a checklist item…"
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
         />
         <button
           type="submit"
           disabled={submitting || !text.trim()}
-          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-violet-50 hover:text-violet-700 disabled:opacity-50"
+          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50"
         >
           Add
         </button>

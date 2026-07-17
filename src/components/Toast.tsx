@@ -16,8 +16,8 @@ export function Toast({ message, trigger }: { message: string | null; trigger: n
   if (!message || !visible) return null;
 
   return (
-    <div className="animate-slide-in-right fixed bottom-6 right-6 z-50 max-w-xs rounded-lg border border-violet-100 bg-white px-4 py-3 shadow-lg shadow-violet-200/50">
-      <p className="text-sm font-medium text-violet-950">{message}</p>
+    <div className="animate-slide-in-right fixed bottom-6 right-6 z-50 max-w-xs rounded-lg border border-blue-100 bg-white px-4 py-3 shadow-lg shadow-blue-200/50">
+      <p className="text-sm font-medium text-blue-950">{message}</p>
     </div>
   );
 }

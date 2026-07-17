@@ -76,7 +76,7 @@ function BoardContent({ projectId }: { projectId: string }) {
       <Toast message={toastMessage} trigger={toastKey} />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-violet-950">{project.name}</h1>
+          <h1 className="text-2xl font-bold text-blue-950">{project.name}</h1>
           {project.description && (
             <p className="text-sm text-neutral-500">{project.description}</p>
           )}
@@ -84,13 +84,13 @@ function BoardContent({ projectId }: { projectId: string }) {
         <div className="flex items-center gap-2">
           <Link
             href={`/projects/${projectId}/log`}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-violet-50 hover:text-violet-700"
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
           >
             Voyage Log
           </Link>
           <Link
             href={`/projects/${projectId}/insights`}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-violet-50 hover:text-violet-700"
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
           >
             Insights
           </Link>
@@ -108,7 +108,7 @@ function BoardContent({ projectId }: { projectId: string }) {
         <select
           value={assigneeFilter}
           onChange={(e) => setAssigneeFilter(e.target.value)}
-          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
         >
           <option value="">Everyone</option>
           {project.memberEmails.map((email) => (
@@ -122,7 +122,7 @@ function BoardContent({ projectId }: { projectId: string }) {
         <select
           value={labelFilter}
           onChange={(e) => setLabelFilter(e.target.value as TaskLabel | "")}
-          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
         >
           <option value="">All labels</option>
           {TASK_LABELS.map((l) => (
@@ -148,7 +148,7 @@ function BoardContent({ projectId }: { projectId: string }) {
             onDragLeave={() => setDragOverStatus(null)}
             onDrop={(e) => handleDrop(e, status.value)}
             className={`space-y-3 rounded-lg p-2 transition-colors ${
-              dragOverStatus === status.value ? "bg-violet-50" : ""
+              dragOverStatus === status.value ? "bg-blue-50" : ""
             }`}
           >
             <h2 className="text-sm font-semibold text-neutral-600">

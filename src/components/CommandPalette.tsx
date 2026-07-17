@@ -75,7 +75,7 @@ export function CommandPalette() {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md overflow-hidden rounded-xl border border-violet-100 bg-white shadow-2xl"
+        className="w-full max-w-md overflow-hidden rounded-xl border border-blue-100 bg-white shadow-2xl"
       >
         <input
           autoFocus
@@ -108,7 +108,7 @@ export function CommandPalette() {
               onClick={() => handleSelect(command)}
               onMouseEnter={() => setActiveIndex(index)}
               className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm ${
-                index === activeIndex ? "bg-violet-50 text-violet-700" : "text-neutral-700"
+                index === activeIndex ? "bg-blue-50 text-blue-700" : "text-neutral-700"
               }`}
             >
               <span>{command.label}</span>

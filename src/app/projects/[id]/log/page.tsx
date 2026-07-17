@@ -32,7 +32,7 @@ function eventDot(event: VoyageEvent): string {
     case "comment_added":
       return "bg-sky-400";
     case "checklist_completed":
-      return "bg-violet-500";
+      return "bg-blue-500";
   }
 }
 
@@ -52,19 +52,19 @@ function LogContent({ projectId }: { projectId: string }) {
   return (
     <div className="animate-fade-in-up mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8">
       <div>
-        <Link href={`/projects/${projectId}`} className="text-sm text-violet-600 hover:underline">
+        <Link href={`/projects/${projectId}`} className="text-sm text-blue-600 hover:underline">
           ← Back to board
         </Link>
-        <h1 className="mt-1 text-2xl font-bold text-violet-950">{project.name} · Voyage Log</h1>
+        <h1 className="mt-1 text-2xl font-bold text-blue-950">{project.name} · Voyage Log</h1>
         <p className="text-sm text-neutral-500">Every leg of the journey, in order.</p>
       </div>
 
       {events.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-violet-200 bg-violet-50/40 p-8 text-center">
+        <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center">
           <p className="text-sm text-neutral-600">Nothing logged yet — create a task to start the voyage.</p>
         </div>
       ) : (
-        <ol className="space-y-4 border-l border-violet-200 pl-5">
+        <ol className="space-y-4 border-l border-blue-200 pl-5">
           {events.map((event) => (
             <li key={event.id} className="relative">
               <span

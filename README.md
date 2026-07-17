@@ -6,7 +6,9 @@ A project management platform built for Phase 1 Project 1 of the Hult Cohort Dev
 
 **The story:** every project is a route, every task a leg of the journey, and your team is the crew.
 Finishing work should feel like logging a leg of a voyage, not just checking a box — that's the
-thread behind the Focus widget, the Voyage Log, and the Conditions indicator below.
+thread behind the Focus widget, the Voyage Log, and the Conditions indicator below. The visual
+theme follows suit: a light-blue sky/ocean gradient, a ship's helm mark, and nautical icons
+(anchor, sailboat, waves) instead of emoji.
 
 ## Reviewer login
 
