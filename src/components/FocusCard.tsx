@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { updateTaskStatus } from "@/lib/firestore";
 import type { Project, Task } from "@/lib/types";
+import { CompassIcon } from "./icons";
 
 export function FocusCard({
   focusTask,
@@ -14,24 +15,34 @@ export function FocusCard({
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50 to-cyan-50 p-4">
       {focusTask ? (
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
-            Focus next
-          </p>
-          <Link
-            href={`/projects/${focusTask.project.id}`}
-            className="font-medium text-blue-950 hover:underline"
-          >
-            {focusTask.task.title}
-          </Link>
-          <p className="text-xs text-neutral-500">{focusTask.project.name}</p>
+        <div className="flex items-start gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+            <CompassIcon className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+              Focus next
+            </p>
+            <Link
+              href={`/projects/${focusTask.project.id}`}
+              className="font-medium text-blue-950 hover:underline"
+            >
+              {focusTask.task.title}
+            </Link>
+            <p className="text-xs text-neutral-500">{focusTask.project.name}</p>
+          </div>
         </div>
       ) : (
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
-            Focus next
-          </p>
-          <p className="text-sm text-neutral-500">Nothing assigned to you right now</p>
+        <div className="flex items-start gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+            <CompassIcon className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+              Focus next
+            </p>
+            <p className="text-sm text-neutral-500">Nothing assigned to you right now</p>
+          </div>
         </div>
       )}
 

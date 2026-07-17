@@ -46,7 +46,7 @@ export const TASK_LABELS: { value: TaskLabel; label: string; classes: string }[]
   { value: "feature", label: "Feature", classes: "bg-emerald-100 text-emerald-700" },
   { value: "docs", label: "Docs", classes: "bg-sky-100 text-sky-700" },
   { value: "urgent", label: "Urgent", classes: "bg-orange-100 text-orange-700" },
-  { value: "design", label: "Design", classes: "bg-fuchsia-100 text-fuchsia-700" },
+  { value: "design", label: "Design", classes: "bg-teal-100 text-teal-700" },
 ];
 
 export const PROJECT_TEMPLATES: {

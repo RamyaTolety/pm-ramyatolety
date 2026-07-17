@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { RequireAuth } from "@/components/RequireAuth";
+import { WavesIcon } from "@/components/icons";
 import { useAuth } from "@/lib/auth-context";
 import { subscribeToProjectTasks, subscribeToUserProjects } from "@/lib/firestore";
 import type { Project, Task, TaskStatus } from "@/lib/types";
@@ -102,7 +103,8 @@ function MyTasksContent() {
 
       {rows.length === 0 ? (
         <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center">
-          <p className="text-sm text-neutral-600">No tasks match these filters — clear one to see more.</p>
+          <WavesIcon className="mx-auto h-8 w-8 text-blue-300" />
+          <p className="mt-2 text-sm text-neutral-600">No tasks match these filters — clear one to see more.</p>
         </div>
       ) : (
         <div className="space-y-2">

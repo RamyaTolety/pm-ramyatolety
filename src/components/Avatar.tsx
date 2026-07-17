@@ -7,10 +7,8 @@ const PALETTE = [
   "bg-teal-400",
   "bg-cyan-400",
   "bg-sky-400",
-  "bg-indigo-400",
-  "bg-violet-400",
-  "bg-fuchsia-400",
-  "bg-pink-400",
+  "bg-blue-400",
+  "bg-slate-400",
 ];
 
 function colorForEmail(email: string) {

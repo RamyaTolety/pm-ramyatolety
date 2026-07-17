@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { RequireAuth } from "@/components/RequireAuth";
+import { WavesIcon } from "@/components/icons";
 import { subscribeToProject } from "@/lib/firestore";
 import type { Project } from "@/lib/types";
 import { useVoyageLog } from "@/lib/use-voyage-log";
@@ -61,7 +62,8 @@ function LogContent({ projectId }: { projectId: string }) {
 
       {events.length === 0 ? (
         <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center">
-          <p className="text-sm text-neutral-600">Nothing logged yet — create a task to start the voyage.</p>
+          <WavesIcon className="mx-auto h-8 w-8 text-blue-300" />
+          <p className="mt-2 text-sm text-neutral-600">Nothing logged yet — create a task to start the voyage.</p>
         </div>
       ) : (
         <ol className="space-y-4 border-l border-blue-200 pl-5">

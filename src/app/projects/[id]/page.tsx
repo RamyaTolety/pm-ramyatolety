@@ -9,9 +9,16 @@ import { NewTaskForm } from "@/components/NewTaskForm";
 import { RequireAuth } from "@/components/RequireAuth";
 import { TaskCard } from "@/components/TaskCard";
 import { Toast } from "@/components/Toast";
+import { AnchorIcon, FlagIcon, SailboatIcon } from "@/components/icons";
 import { subscribeToProject, subscribeToProjectTasks, updateTaskStatus } from "@/lib/firestore";
 import type { Project, Task, TaskLabel, TaskStatus } from "@/lib/types";
 import { TASK_LABELS, TASK_STATUSES } from "@/lib/types";
+
+const STATUS_ICONS: Record<TaskStatus, typeof AnchorIcon> = {
+  todo: AnchorIcon,
+  in_progress: SailboatIcon,
+  done: FlagIcon,
+};
 
 function BoardContent({ projectId }: { projectId: string }) {
   const [project, setProject] = useState<Project | null | undefined>(undefined);
@@ -151,7 +158,11 @@ function BoardContent({ projectId }: { projectId: string }) {
               dragOverStatus === status.value ? "bg-blue-50" : ""
             }`}
           >
-            <h2 className="text-sm font-semibold text-neutral-600">
+            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600">
+              {(() => {
+                const StatusIcon = STATUS_ICONS[status.value];
+                return <StatusIcon className="h-4 w-4 text-blue-400" />;
+              })()}
               {status.label} ({filteredTasks.filter((t) => t.status === status.value).length})
             </h2>
             <div className="space-y-2">

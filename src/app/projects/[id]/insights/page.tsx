@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { RequireAuth } from "@/components/RequireAuth";
+import { AnchorIcon, SailboatIcon, WavesIcon } from "@/components/icons";
 import { subscribeToProject, subscribeToProjectTasks } from "@/lib/firestore";
 import type { Project, Task } from "@/lib/types";
 
@@ -58,28 +59,45 @@ function InsightsContent({ projectId }: { projectId: string }) {
   const conditions = useMemo(() => {
     const incomplete = tasks.filter((t) => t.status !== "done");
     if (tasks.length === 0) {
-      return { label: "Calm harbor", note: "Nothing logged yet.", classes: "bg-slate-100 text-slate-600" };
+      return {
+        label: "Calm harbor",
+        note: "Nothing logged yet.",
+        classes: "bg-slate-100 text-slate-600",
+        Icon: AnchorIcon,
+      };
     }
     if (incomplete.length === 0) {
-      return { label: "Smooth sailing", note: "Everything shipped.", classes: "bg-emerald-100 text-emerald-700" };
+      return {
+        label: "Smooth sailing",
+        note: "Everything shipped.",
+        classes: "bg-emerald-100 text-emerald-700",
+        Icon: SailboatIcon,
+      };
     }
     const now = Date.now();
     const overdue = incomplete.filter((t) => t.dueDate && t.dueDate < now).length;
     const ratio = overdue / incomplete.length;
     if (ratio === 0) {
-      return { label: "Smooth sailing", note: "No overdue tasks.", classes: "bg-emerald-100 text-emerald-700" };
+      return {
+        label: "Smooth sailing",
+        note: "No overdue tasks.",
+        classes: "bg-emerald-100 text-emerald-700",
+        Icon: SailboatIcon,
+      };
     }
     if (ratio < 0.34) {
       return {
         label: "Choppy waters",
         note: `${overdue} of ${incomplete.length} open tasks overdue.`,
         classes: "bg-amber-100 text-amber-700",
+        Icon: WavesIcon,
       };
     }
     return {
       label: "Storm warning",
       note: `${overdue} of ${incomplete.length} open tasks overdue.`,
       classes: "bg-rose-100 text-rose-700",
+      Icon: WavesIcon,
     };
   }, [tasks]);
 
@@ -105,6 +123,7 @@ function InsightsContent({ projectId }: { projectId: string }) {
       </div>
 
       <div className="flex items-center gap-3 rounded-xl border border-blue-100 bg-white p-4">
+        <conditions.Icon className="h-5 w-5 shrink-0 text-blue-400" />
         <span className={`rounded-full px-3 py-1 text-sm font-semibold ${conditions.classes}`}>
           {conditions.label}
         </span>

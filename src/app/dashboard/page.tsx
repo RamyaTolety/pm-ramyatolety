@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { NewProjectForm } from "@/components/NewProjectForm";
 import { ProjectCard } from "@/components/ProjectCard";
 import { RequireAuth } from "@/components/RequireAuth";
+import { AnchorIcon, SailboatIcon } from "@/components/icons";
 import { useAuth } from "@/lib/auth-context";
 import { subscribeToUserProjects } from "@/lib/firestore";
 import type { Project } from "@/lib/types";
@@ -44,7 +45,12 @@ function DashboardContent() {
 
       {visible.length === 0 ? (
         <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center">
-          <p className="text-sm text-neutral-600">
+          {showArchived ? (
+            <AnchorIcon className="mx-auto h-8 w-8 text-blue-300" />
+          ) : (
+            <SailboatIcon className="mx-auto h-8 w-8 text-blue-300" />
+          )}
+          <p className="mt-2 text-sm text-neutral-600">
             {showArchived
               ? "No archived projects — anything you archive shows up here."
               : "No projects yet. Create your first one and chart the course."}
