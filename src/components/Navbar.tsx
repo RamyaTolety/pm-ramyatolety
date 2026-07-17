@@ -20,6 +20,10 @@ export function Navbar() {
         </Link>
         {user && (
           <div className="flex items-center gap-4 text-sm text-neutral-600">
+            <span className="hidden items-center gap-1 rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-400 sm:flex">
+              <kbd>⌘</kbd>
+              <kbd>K</kbd> to jump around
+            </span>
             <Link
               href="/my-tasks"
               className="flex items-center gap-1.5 hover:text-violet-700 hover:underline"

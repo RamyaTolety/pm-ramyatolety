@@ -8,13 +8,14 @@ import { NewTaskForm } from "@/components/NewTaskForm";
 import { RequireAuth } from "@/components/RequireAuth";
 import { TaskCard } from "@/components/TaskCard";
 import { subscribeToProject, subscribeToProjectTasks, updateTaskStatus } from "@/lib/firestore";
-import type { Project, Task, TaskStatus } from "@/lib/types";
-import { TASK_STATUSES } from "@/lib/types";
+import type { Project, Task, TaskLabel, TaskStatus } from "@/lib/types";
+import { TASK_LABELS, TASK_STATUSES } from "@/lib/types";
 
 function BoardContent({ projectId }: { projectId: string }) {
   const [project, setProject] = useState<Project | null | undefined>(undefined);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [labelFilter, setLabelFilter] = useState<TaskLabel | "">("");
   const [celebration, setCelebration] = useState(0);
   const [newTaskOpen, setNewTaskOpen] = useState(false);
   const [dragOverStatus, setDragOverStatus] = useState<TaskStatus | null>(null);
@@ -42,9 +43,9 @@ function BoardContent({ projectId }: { projectId: string }) {
     return <p className="p-8 text-center text-neutral-500">Project not found.</p>;
   }
 
-  const filteredTasks = assigneeFilter
-    ? tasks.filter((t) => t.assigneeEmail === assigneeFilter)
-    : tasks;
+  const filteredTasks = tasks
+    .filter((t) => !assigneeFilter || t.assigneeEmail === assigneeFilter)
+    .filter((t) => !labelFilter || t.labels?.includes(labelFilter));
 
   function handleDrop(e: React.DragEvent, status: TaskStatus) {
     e.preventDefault();
@@ -87,6 +88,20 @@ function BoardContent({ projectId }: { projectId: string }) {
           {project.memberEmails.map((email) => (
             <option key={email} value={email}>
               {email}
+            </option>
+          ))}
+        </select>
+
+        <label className="text-neutral-600">Label:</label>
+        <select
+          value={labelFilter}
+          onChange={(e) => setLabelFilter(e.target.value as TaskLabel | "")}
+          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+        >
+          <option value="">All labels</option>
+          {TASK_LABELS.map((l) => (
+            <option key={l.value} value={l.value}>
+              {l.label}
             </option>
           ))}
         </select>

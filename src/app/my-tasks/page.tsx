@@ -101,7 +101,12 @@ function MyTasksContent() {
       </div>
 
       {rows.length === 0 ? (
-        <p className="text-sm text-neutral-500">No tasks match these filters.</p>
+        <div className="rounded-xl border border-dashed border-violet-200 bg-violet-50/40 p-8 text-center">
+          <p className="text-3xl" aria-hidden>
+            🔭
+          </p>
+          <p className="mt-2 text-sm text-neutral-600">No tasks match these filters — clear one to see more.</p>
+        </div>
       ) : (
         <div className="space-y-2">
           {rows.map(({ project, task }) => (

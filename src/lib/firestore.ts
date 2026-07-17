@@ -9,7 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Comment, Project, Task, TaskStatus } from "./types";
+import type { Comment, Project, Task, TaskLabel, TaskStatus } from "./types";
 
 const projectsRef = collection(db, "projects");
 
@@ -78,6 +78,7 @@ export async function createTask(
     description: string;
     assigneeEmail: string | null;
     dueDate: number | null;
+    labels: TaskLabel[];
   }
 ) {
   const tasksRef = collection(db, "projects", projectId, "tasks");
@@ -87,6 +88,7 @@ export async function createTask(
     status: "todo" as TaskStatus,
     assigneeEmail: params.assigneeEmail,
     dueDate: params.dueDate,
+    labels: params.labels,
     createdAt: Date.now(),
     updatedAt: Date.now(),
   });
@@ -100,7 +102,9 @@ export async function updateTaskStatus(projectId: string, taskId: string, status
 export async function updateTask(
   projectId: string,
   taskId: string,
-  updates: Partial<Pick<Task, "title" | "description" | "assigneeEmail" | "status" | "dueDate">>
+  updates: Partial<
+    Pick<Task, "title" | "description" | "assigneeEmail" | "status" | "dueDate" | "labels">
+  >
 ) {
   const taskRef = doc(db, "projects", projectId, "tasks", taskId);
   return updateDoc(taskRef, { ...updates, updatedAt: Date.now() });

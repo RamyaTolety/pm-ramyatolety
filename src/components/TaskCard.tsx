@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { updateTaskStatus } from "@/lib/firestore";
 import type { Task, TaskStatus } from "@/lib/types";
-import { TASK_STATUSES } from "@/lib/types";
+import { TASK_LABELS, TASK_STATUSES } from "@/lib/types";
 import { Avatar } from "./Avatar";
 import { TaskComments } from "./TaskComments";
 
@@ -43,6 +43,23 @@ export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () =
       }}
       className={`cursor-grab space-y-2 rounded-md border border-t-4 border-neutral-200 bg-white p-3 text-sm shadow-sm active:cursor-grabbing ${status?.accent ?? ""}`}
     >
+      {task.labels?.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {task.labels.map((labelValue) => {
+            const label = TASK_LABELS.find((l) => l.value === labelValue);
+            if (!label) return null;
+            return (
+              <span
+                key={labelValue}
+                className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${label.classes}`}
+              >
+                {label.label}
+              </span>
+            );
+          })}
+        </div>
+      )}
+
       <p className="font-medium">{task.title}</p>
       {task.description && <p className="text-neutral-500">{task.description}</p>}
 

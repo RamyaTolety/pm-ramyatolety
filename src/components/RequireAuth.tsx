@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { CommandPalette } from "./CommandPalette";
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -18,5 +19,10 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
     return <div className="p-8 text-center text-neutral-500">Loading…</div>;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <CommandPalette />
+      {children}
+    </>
+  );
 }

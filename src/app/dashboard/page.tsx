@@ -43,9 +43,16 @@ function DashboardContent() {
       </label>
 
       {visible.length === 0 ? (
-        <p className="text-sm text-neutral-500">
-          {showArchived ? "No archived projects." : "No projects yet — create one to get started."}
-        </p>
+        <div className="rounded-xl border border-dashed border-violet-200 bg-violet-50/40 p-8 text-center">
+          <p className="text-3xl" aria-hidden>
+            {showArchived ? "🗄️" : "🧭"}
+          </p>
+          <p className="mt-2 text-sm text-neutral-600">
+            {showArchived
+              ? "No archived projects — anything you archive shows up here."
+              : "No projects yet. Create your first one and chart the course."}
+          </p>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {visible.map((project) => (
