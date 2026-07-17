@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cohort PM
 
-## Getting Started
+A project management platform built for Phase 1 Project 1 of the Hult Cohort Developer Program.
 
-First, run the development server:
+## Architecture
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework:** Next.js 15 (App Router) + TypeScript + Tailwind CSS
+- **Auth:** Firebase Authentication (email + password)
+- **Data:** Firestore
+  - `projects/{projectId}` — `name`, `description`, `ownerId`, `ownerEmail`, `memberEmails[]`, `archived`, `createdAt`
+  - `projects/{projectId}/tasks/{taskId}` — `title`, `description`, `status` (`todo` | `in_progress` | `done`), `assigneeEmail`, `createdAt`, `updatedAt`
+- **Real-time:** all reads use Firestore `onSnapshot` listeners, so the board and dashboard update live across users without a refresh.
+- **Access control:** `firestore.rules` restricts read/write on a project (and its tasks) to users whose email is in that project's `memberEmails`.
+- **Hosting:** Vercel (auto-deploys `main`)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Email/password auth, unlimited accounts
+- Create / archive projects, ≥1 project per user
+- Add cohort members to a project by email (grants task assignment + board access)
+- Tasks with title, description, status (todo / in progress / done), assignee
+- Kanban board per project, filterable by assignee
+- Cross-project "My Tasks" view, filterable by project, status, and assignee
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local setup
 
-## Learn More
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com):
+   - Enable **Authentication → Email/Password**
+   - Enable **Firestore Database** (production mode)
+   - Deploy `firestore.rules` (Firebase console → Firestore → Rules, or `firebase deploy --only firestore:rules`)
+   - Copy the web app config into a `.env.local` (see `.env.local.example`)
+3. Run the dev server:
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000).
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployed on Vercel with the same environment variables set as project env vars. Firestore data persists independently of the app deployment, so redeploys don't affect existing projects/tasks.

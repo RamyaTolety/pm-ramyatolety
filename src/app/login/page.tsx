@@ -1,0 +1,90 @@
+"use client";
+
+import { FirebaseError } from "firebase/app";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
+
+export default function LoginPage() {
+  const { logIn, signUp } = useAuth();
+  const router = useRouter();
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    try {
+      if (mode === "login") {
+        await logIn(email, password);
+      } else {
+        await signUp(email, password);
+      }
+      router.push("/dashboard");
+    } catch (err) {
+      const message =
+        err instanceof FirebaseError ? err.message.replace("Firebase: ", "") : "Something went wrong";
+      setError(message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-1 items-center justify-center px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-sm space-y-4 rounded-lg border border-neutral-200 bg-white p-6 shadow-sm"
+      >
+        <h1 className="text-xl font-semibold">
+          {mode === "login" ? "Log in" : "Create account"}
+        </h1>
+
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-neutral-700">Email</label>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-neutral-700">Password</label>
+          <input
+            type="password"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          />
+        </div>
+
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white hover:bg-neutral-700 disabled:opacity-50"
+        >
+          {submitting ? "Please wait…" : mode === "login" ? "Log in" : "Sign up"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMode(mode === "login" ? "signup" : "login")}
+          className="w-full text-center text-sm text-neutral-600 hover:underline"
+        >
+          {mode === "login" ? "Need an account? Sign up" : "Already have an account? Log in"}
+        </button>
+      </form>
+    </div>
+  );
+}
