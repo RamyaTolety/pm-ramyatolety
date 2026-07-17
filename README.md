@@ -1,4 +1,6 @@
-# Cohort PM
+# Waypoint 🧭
+
+_Chart the course. Ship the work._
 
 A project management platform built for Phase 1 Project 1 of the Hult Cohort Developer Program.
 

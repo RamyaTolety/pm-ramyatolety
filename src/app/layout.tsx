@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cohort PM",
-  description: "Project management platform for the Hult cohort",
+  title: "Waypoint",
+  description: "Chart the course. Ship the work. Project management for the cohort.",
 };
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900">
+      <body className="min-h-full flex flex-col bg-gradient-to-b from-violet-50 via-white to-white text-neutral-900">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

@@ -48,7 +48,7 @@ function MyTasksContent() {
 
   return (
     <div className="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8">
-      <h1 className="text-2xl font-semibold">My Tasks</h1>
+      <h1 className="text-2xl font-bold text-violet-950">My Tasks</h1>
 
       <div className="flex flex-wrap gap-4 text-sm">
         <label className="flex items-center gap-2">
@@ -56,7 +56,7 @@ function MyTasksContent() {
           <select
             value={projectFilter}
             onChange={(e) => setProjectFilter(e.target.value)}
-            className="rounded-md border border-neutral-300 px-2 py-1"
+            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
           >
             <option value="">All</option>
             {projects.map((p) => (
@@ -72,7 +72,7 @@ function MyTasksContent() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as TaskStatus | "")}
-            className="rounded-md border border-neutral-300 px-2 py-1"
+            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
           >
             <option value="">All</option>
             {TASK_STATUSES.map((s) => (
@@ -88,7 +88,7 @@ function MyTasksContent() {
           <select
             value={assigneeFilter}
             onChange={(e) => setAssigneeFilter(e.target.value)}
-            className="rounded-md border border-neutral-300 px-2 py-1"
+            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
           >
             <option value="">Everyone</option>
             {allMemberEmails.map((email) => (
@@ -108,7 +108,7 @@ function MyTasksContent() {
             <Link
               key={task.id}
               href={`/projects/${project.id}`}
-              className="flex items-center justify-between rounded-md border border-neutral-200 bg-white p-3 text-sm hover:bg-neutral-50"
+              className="flex items-center justify-between rounded-lg border border-violet-100 bg-white p-3 text-sm shadow-sm shadow-violet-100/40 hover:shadow-md hover:shadow-violet-100/60"
             >
               <div>
                 <p className="font-medium">{task.title}</p>
@@ -116,7 +116,8 @@ function MyTasksContent() {
                   {project.name} · {task.assigneeEmail ?? "Unassigned"}
                 </p>
               </div>
-              <span className="rounded-full bg-neutral-100 px-2 py-1 text-xs text-neutral-600">
+              <span className="rounded-full bg-violet-50 px-2 py-1 text-xs text-violet-700">
+                {TASK_STATUSES.find((s) => s.value === task.status)?.emoji}{" "}
                 {TASK_STATUSES.find((s) => s.value === task.status)?.label}
               </span>
             </Link>

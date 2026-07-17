@@ -24,7 +24,7 @@ function DashboardContent() {
   return (
     <div className="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Your projects</h1>
+        <h1 className="text-2xl font-bold text-violet-950">Your projects</h1>
         <NewProjectForm />
       </div>
 

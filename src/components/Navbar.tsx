@@ -3,23 +3,25 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { Avatar } from "./Avatar";
 
 export function Navbar() {
   const { user, logOut } = useAuth();
   const router = useRouter();
 
   return (
-    <header className="border-b border-neutral-200 bg-white">
+    <header className="border-b border-violet-100 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/dashboard" className="font-semibold">
-          Cohort PM
+        <Link href="/dashboard" className="flex items-center gap-1.5 font-semibold text-violet-950">
+          <span aria-hidden>🧭</span>
+          Waypoint
         </Link>
         {user && (
           <div className="flex items-center gap-4 text-sm text-neutral-600">
-            <Link href="/my-tasks" className="hover:underline">
+            <Link href="/my-tasks" className="hover:text-violet-700 hover:underline">
               My Tasks
             </Link>
-            <span>{user.email}</span>
+            <Avatar email={user.email ?? ""} size="md" />
             <button
               onClick={async () => {
                 await logOut();

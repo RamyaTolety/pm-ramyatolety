@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Confetti } from "@/components/Confetti";
 import { Navbar } from "@/components/Navbar";
 import { NewTaskForm } from "@/components/NewTaskForm";
 import { RequireAuth } from "@/components/RequireAuth";
@@ -14,6 +15,7 @@ function BoardContent({ projectId }: { projectId: string }) {
   const [project, setProject] = useState<Project | null | undefined>(undefined);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [celebration, setCelebration] = useState(0);
 
   useEffect(() => subscribeToProject(projectId, setProject), [projectId]);
   useEffect(() => subscribeToProjectTasks(projectId, setTasks), [projectId]);
@@ -31,9 +33,10 @@ function BoardContent({ projectId }: { projectId: string }) {
 
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-8">
+      <Confetti trigger={celebration} />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{project.name}</h1>
+          <h1 className="text-2xl font-bold text-violet-950">{project.name}</h1>
           {project.description && (
             <p className="text-sm text-neutral-500">{project.description}</p>
           )}
@@ -46,7 +49,7 @@ function BoardContent({ projectId }: { projectId: string }) {
         <select
           value={assigneeFilter}
           onChange={(e) => setAssigneeFilter(e.target.value)}
-          className="rounded-md border border-neutral-300 px-2 py-1"
+          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
         >
           <option value="">Everyone</option>
           {project.memberEmails.map((email) => (
@@ -60,14 +63,19 @@ function BoardContent({ projectId }: { projectId: string }) {
       <div className="grid gap-4 sm:grid-cols-3">
         {TASK_STATUSES.map((status) => (
           <div key={status.value} className="space-y-3">
-            <h2 className="text-sm font-semibold text-neutral-600">
+            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600">
+              <span aria-hidden>{status.emoji}</span>
               {status.label} ({filteredTasks.filter((t) => t.status === status.value).length})
             </h2>
             <div className="space-y-2">
               {filteredTasks
                 .filter((t) => t.status === status.value)
                 .map((task) => (
-                  <TaskCard key={task.id} task={task} />
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onCompleted={() => setCelebration((n) => n + 1)}
+                  />
                 ))}
             </div>
           </div>
