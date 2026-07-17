@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { createProject } from "@/lib/firestore";
+import { createProject, createTask } from "@/lib/firestore";
+import { PROJECT_TEMPLATES } from "@/lib/types";
 
 export function NewProjectForm() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [template, setTemplate] = useState(PROJECT_TEMPLATES[0].value);
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -16,14 +18,27 @@ export function NewProjectForm() {
     if (!user?.email) return;
     setSubmitting(true);
     try {
-      await createProject({
+      const project = await createProject({
         name,
         description,
         ownerId: user.uid,
         ownerEmail: user.email,
       });
+      const chosenTemplate = PROJECT_TEMPLATES.find((t) => t.value === template);
+      if (chosenTemplate) {
+        for (const starterTask of chosenTemplate.starterTasks) {
+          await createTask(project.id, {
+            title: starterTask.title,
+            description: starterTask.description,
+            assigneeEmail: null,
+            dueDate: null,
+            labels: starterTask.labels,
+          });
+        }
+      }
       setName("");
       setDescription("");
+      setTemplate(PROJECT_TEMPLATES[0].value);
       setOpen(false);
     } finally {
       setSubmitting(false);
@@ -60,6 +75,26 @@ export function NewProjectForm() {
         className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
         rows={2}
       />
+      <div className="space-y-1">
+        <p className="text-xs font-medium text-neutral-600">Template</p>
+        <div className="flex flex-wrap gap-2">
+          {PROJECT_TEMPLATES.map((t) => (
+            <button
+              key={t.value}
+              type="button"
+              onClick={() => setTemplate(t.value)}
+              title={t.description}
+              className={`rounded-md border px-2.5 py-1 text-xs ${
+                template === t.value
+                  ? "border-violet-400 bg-violet-50 text-violet-700"
+                  : "border-neutral-300 text-neutral-500"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="flex gap-2">
         <button
           type="submit"

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Confetti } from "@/components/Confetti";
@@ -69,12 +70,20 @@ function BoardContent({ projectId }: { projectId: string }) {
             <p className="text-sm text-neutral-500">{project.description}</p>
           )}
         </div>
-        <NewTaskForm
-          projectId={projectId}
-          memberEmails={project.memberEmails}
-          open={newTaskOpen}
-          onOpenChange={setNewTaskOpen}
-        />
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/projects/${projectId}/insights`}
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-violet-50 hover:text-violet-700"
+          >
+            📊 Insights
+          </Link>
+          <NewTaskForm
+            projectId={projectId}
+            memberEmails={project.memberEmails}
+            open={newTaskOpen}
+            onOpenChange={setNewTaskOpen}
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-2 text-sm">

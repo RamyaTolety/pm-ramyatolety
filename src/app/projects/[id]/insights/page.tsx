@@ -1,0 +1,152 @@
+"use client";
+
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { Navbar } from "@/components/Navbar";
+import { RequireAuth } from "@/components/RequireAuth";
+import { subscribeToProject, subscribeToProjectTasks } from "@/lib/firestore";
+import type { Project, Task } from "@/lib/types";
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function InsightsContent({ projectId }: { projectId: string }) {
+  const [project, setProject] = useState<Project | null | undefined>(undefined);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => subscribeToProject(projectId, setProject), [projectId]);
+  useEffect(() => subscribeToProjectTasks(projectId, setTasks), [projectId]);
+
+  const dailyCompleted = useMemo(() => {
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+      start.setDate(start.getDate() - (6 - i));
+      return start.getTime();
+    });
+    return days.map((dayStart) => {
+      const dayEnd = dayStart + DAY_MS;
+      const count = tasks.filter(
+        (t) => t.status === "done" && t.updatedAt >= dayStart && t.updatedAt < dayEnd
+      ).length;
+      const label = new Date(dayStart).toLocaleDateString(undefined, { weekday: "short" });
+      return { label, count };
+    });
+  }, [tasks]);
+
+  const maxDaily = Math.max(1, ...dailyCompleted.map((d) => d.count));
+
+  const byAssignee = useMemo(() => {
+    const map = new Map<string, { total: number; done: number }>();
+    for (const task of tasks) {
+      const key = task.assigneeEmail ?? "Unassigned";
+      const entry = map.get(key) ?? { total: 0, done: 0 };
+      entry.total += 1;
+      if (task.status === "done") entry.done += 1;
+      map.set(key, entry);
+    }
+    return Array.from(map.entries()).sort((a, b) => b[1].total - a[1].total);
+  }, [tasks]);
+
+  const avgCycleTimeHours = useMemo(() => {
+    const done = tasks.filter((t) => t.status === "done");
+    if (done.length === 0) return null;
+    const totalMs = done.reduce((sum, t) => sum + (t.updatedAt - t.createdAt), 0);
+    return totalMs / done.length / (60 * 60 * 1000);
+  }, [tasks]);
+
+  if (project === undefined) {
+    return <p className="p-8 text-center text-neutral-500">Loading…</p>;
+  }
+  if (project === null) {
+    return <p className="p-8 text-center text-neutral-500">Project not found.</p>;
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-4xl flex-1 space-y-8 px-4 py-8">
+      <div>
+        <Link
+          href={`/projects/${projectId}`}
+          className="text-sm text-violet-600 hover:underline"
+        >
+          ← Back to board
+        </Link>
+        <h1 className="mt-1 text-2xl font-bold text-violet-950">
+          {project.name} · Insights
+        </h1>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-violet-100 bg-white p-4">
+          <p className="text-2xl font-bold text-violet-950">{tasks.length}</p>
+          <p className="text-xs text-neutral-500">total tasks</p>
+        </div>
+        <div className="rounded-xl border border-violet-100 bg-white p-4">
+          <p className="text-2xl font-bold text-violet-950">
+            {tasks.filter((t) => t.status === "done").length}
+          </p>
+          <p className="text-xs text-neutral-500">completed</p>
+        </div>
+        <div className="rounded-xl border border-violet-100 bg-white p-4">
+          <p className="text-2xl font-bold text-violet-950">
+            {avgCycleTimeHours === null ? "—" : `${avgCycleTimeHours.toFixed(1)}h`}
+          </p>
+          <p className="text-xs text-neutral-500">avg. cycle time</p>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-violet-100 bg-white p-5">
+        <h2 className="mb-3 text-sm font-semibold text-neutral-700">Completed, last 7 days</h2>
+        <div className="flex h-32 items-end gap-3">
+          {dailyCompleted.map((day) => (
+            <div key={day.label} className="flex flex-1 flex-col items-center gap-1">
+              <div className="flex h-24 w-full items-end">
+                <div
+                  className="w-full rounded-t-md bg-gradient-to-t from-violet-500 to-fuchsia-400"
+                  style={{ height: `${(day.count / maxDaily) * 100}%`, minHeight: day.count ? 4 : 0 }}
+                />
+              </div>
+              <p className="text-[11px] text-neutral-500">{day.label}</p>
+              <p className="text-[11px] font-medium text-neutral-700">{day.count}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-violet-100 bg-white p-5">
+        <h2 className="mb-3 text-sm font-semibold text-neutral-700">By assignee</h2>
+        {byAssignee.length === 0 ? (
+          <p className="text-sm text-neutral-400">No tasks yet.</p>
+        ) : (
+          <div className="space-y-2">
+            {byAssignee.map(([email, stats]) => (
+              <div key={email} className="flex items-center gap-3 text-sm">
+                <span className="w-48 truncate text-neutral-700">{email}</span>
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-100">
+                  <div
+                    className="h-full rounded-full bg-violet-500"
+                    style={{ width: `${(stats.done / stats.total) * 100}%` }}
+                  />
+                </div>
+                <span className="w-16 text-right text-xs text-neutral-500">
+                  {stats.done}/{stats.total}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function InsightsPage() {
+  const params = useParams<{ id: string }>();
+
+  return (
+    <RequireAuth>
+      <Navbar />
+      <InsightsContent projectId={params.id} />
+    </RequireAuth>
+  );
+}

@@ -9,7 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Comment, Project, Task, TaskLabel, TaskStatus } from "./types";
+import type { ChecklistItem, Comment, Project, Task, TaskLabel, TaskStatus } from "./types";
 
 const projectsRef = collection(db, "projects");
 
@@ -133,4 +133,31 @@ export async function addComment(
     text: params.text,
     createdAt: Date.now(),
   });
+}
+
+export function subscribeToChecklist(
+  projectId: string,
+  taskId: string,
+  callback: (items: ChecklistItem[]) => void
+) {
+  const itemsRef = collection(db, "projects", projectId, "tasks", taskId, "checklistItems");
+  const q = query(itemsRef, orderBy("createdAt", "asc"));
+  return onSnapshot(q, (snap) => {
+    callback(snap.docs.map((d) => ({ id: d.id, ...d.data() } as ChecklistItem)));
+  });
+}
+
+export async function addChecklistItem(projectId: string, taskId: string, text: string) {
+  const itemsRef = collection(db, "projects", projectId, "tasks", taskId, "checklistItems");
+  return addDoc(itemsRef, { text, done: false, createdAt: Date.now() });
+}
+
+export async function toggleChecklistItem(
+  projectId: string,
+  taskId: string,
+  itemId: string,
+  done: boolean
+) {
+  const itemRef = doc(db, "projects", projectId, "tasks", taskId, "checklistItems", itemId);
+  return updateDoc(itemRef, { done });
 }

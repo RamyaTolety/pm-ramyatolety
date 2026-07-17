@@ -5,6 +5,7 @@ import { updateTaskStatus } from "@/lib/firestore";
 import type { Task, TaskStatus } from "@/lib/types";
 import { TASK_LABELS, TASK_STATUSES } from "@/lib/types";
 import { Avatar } from "./Avatar";
+import { TaskChecklist } from "./TaskChecklist";
 import { TaskComments } from "./TaskComments";
 
 function dueDateInfo(dueDate: number | null) {
@@ -24,6 +25,7 @@ function dueDateInfo(dueDate: number | null) {
 
 export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () => void }) {
   const [showComments, setShowComments] = useState(false);
+  const [showChecklist, setShowChecklist] = useState(false);
   const status = TASK_STATUSES.find((s) => s.value === task.status);
   const due = dueDateInfo(task.dueDate);
 
@@ -84,12 +86,21 @@ export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () =
         ))}
       </select>
 
-      <button
-        onClick={() => setShowComments((v) => !v)}
-        className="text-[11px] text-neutral-400 hover:text-violet-600"
-      >
-        {showComments ? "Hide comments" : "Comments"}
-      </button>
+      <div className="flex gap-3">
+        <button
+          onClick={() => setShowChecklist((v) => !v)}
+          className="text-[11px] text-neutral-400 hover:text-violet-600"
+        >
+          {showChecklist ? "Hide checklist" : "Checklist"}
+        </button>
+        <button
+          onClick={() => setShowComments((v) => !v)}
+          className="text-[11px] text-neutral-400 hover:text-violet-600"
+        >
+          {showComments ? "Hide comments" : "Comments"}
+        </button>
+      </div>
+      {showChecklist && <TaskChecklist projectId={task.projectId} taskId={task.id} />}
       {showComments && <TaskComments projectId={task.projectId} taskId={task.id} />}
     </div>
   );

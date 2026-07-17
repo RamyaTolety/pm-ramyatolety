@@ -24,6 +24,7 @@ a due date, so the board, filters, and Focus widget all have real data on first 
   - `projects/{projectId}` — `name`, `description`, `ownerId`, `ownerEmail`, `memberEmails[]`, `archived`, `createdAt`
   - `projects/{projectId}/tasks/{taskId}` — `title`, `description`, `status` (`todo` | `in_progress` | `done`), `assigneeEmail`, `dueDate`, `createdAt`, `updatedAt`
   - `projects/{projectId}/tasks/{taskId}/comments/{commentId}` — `authorEmail`, `text`, `createdAt`
+  - `projects/{projectId}/tasks/{taskId}/checklistItems/{itemId}` — `text`, `done`, `createdAt`
 - **Real-time:** all reads use Firestore `onSnapshot` listeners, so the board and dashboard update live across users without a refresh.
 - **Access control:** `firestore.rules` restricts read/write on a project (and its tasks/comments) to users whose email is in that project's `memberEmails`. `ownerEmail` is immutable on update — found and fixed during self-review, since without it any member could reassign ownership to themselves and then delete the project (delete only checks `ownerEmail`).
 - **Hosting:** Vercel
@@ -39,7 +40,11 @@ a due date, so the board, filters, and Focus widget all have real data on first 
 - **Focus widget** on the dashboard: your single most urgent assigned task (earliest due date first), plus a "shipped this week" count — one clear next action instead of scanning three columns
 - Live incomplete-task count badge next to "My Tasks" in the nav
 - Confetti celebration when a task is marked done
-- Keyboard shortcut: press `n` on a project board to open "new task"
+- Keyboard shortcuts: press `n` to open "new task"; `⌘K`/`Ctrl+K` opens a command palette to jump to any project or page
+- Colored task labels (Bug/Feature/Docs/Urgent/Design), filterable on the board
+- Subtask checklists per task, with a progress bar
+- Project templates on creation (Blank / Sprint Board / Bug Tracker) that pre-populate starter tasks
+- Per-project **Insights** page: 7-day completion chart, average cycle time, breakdown by assignee
 - Cross-project "My Tasks" view, filterable by project, status, and assignee
 
 ## Local setup
