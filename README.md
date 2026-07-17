@@ -1,4 +1,4 @@
-# Waypoint 🧭
+# Waypoint
 
 _Chart the course. Ship the work._
 

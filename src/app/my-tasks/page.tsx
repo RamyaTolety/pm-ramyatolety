@@ -102,10 +102,7 @@ function MyTasksContent() {
 
       {rows.length === 0 ? (
         <div className="rounded-xl border border-dashed border-violet-200 bg-violet-50/40 p-8 text-center">
-          <p className="text-3xl" aria-hidden>
-            🔭
-          </p>
-          <p className="mt-2 text-sm text-neutral-600">No tasks match these filters — clear one to see more.</p>
+          <p className="text-sm text-neutral-600">No tasks match these filters — clear one to see more.</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -122,7 +119,6 @@ function MyTasksContent() {
                 </p>
               </div>
               <span className="rounded-full bg-violet-50 px-2 py-1 text-xs text-violet-700">
-                {TASK_STATUSES.find((s) => s.value === task.status)?.emoji}{" "}
                 {TASK_STATUSES.find((s) => s.value === task.status)?.label}
               </span>
             </Link>

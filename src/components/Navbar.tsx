@@ -14,8 +14,7 @@ export function Navbar() {
   return (
     <header className="border-b border-violet-100 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/dashboard" className="flex items-center gap-1.5 font-semibold text-violet-950">
-          <span aria-hidden>🧭</span>
+        <Link href="/dashboard" className="font-semibold text-violet-950">
           Waypoint
         </Link>
         {user && (

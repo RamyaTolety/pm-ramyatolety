@@ -80,10 +80,9 @@ export const PROJECT_TEMPLATES: {
 export const TASK_STATUSES: {
   value: TaskStatus;
   label: string;
-  emoji: string;
   accent: string;
 }[] = [
-  { value: "todo", label: "To Do", emoji: "📋", accent: "border-t-slate-400" },
-  { value: "in_progress", label: "In Progress", emoji: "🔨", accent: "border-t-amber-400" },
-  { value: "done", label: "Done", emoji: "✅", accent: "border-t-emerald-400" },
+  { value: "todo", label: "To Do", accent: "border-t-slate-400" },
+  { value: "in_progress", label: "In Progress", accent: "border-t-amber-400" },
+  { value: "done", label: "Done", accent: "border-t-emerald-400" },
 ];

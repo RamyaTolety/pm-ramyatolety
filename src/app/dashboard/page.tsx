@@ -44,10 +44,7 @@ function DashboardContent() {
 
       {visible.length === 0 ? (
         <div className="rounded-xl border border-dashed border-violet-200 bg-violet-50/40 p-8 text-center">
-          <p className="text-3xl" aria-hidden>
-            {showArchived ? "🗄️" : "🧭"}
-          </p>
-          <p className="mt-2 text-sm text-neutral-600">
+          <p className="text-sm text-neutral-600">
             {showArchived
               ? "No archived projects — anything you archive shows up here."
               : "No projects yet. Create your first one and chart the course."}

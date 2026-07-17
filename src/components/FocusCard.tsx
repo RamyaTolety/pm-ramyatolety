@@ -31,7 +31,7 @@ export function FocusCard({
           <p className="text-xs font-semibold uppercase tracking-wide text-violet-600">
             Focus next
           </p>
-          <p className="text-sm text-neutral-500">Nothing assigned to you right now 🎉</p>
+          <p className="text-sm text-neutral-500">Nothing assigned to you right now</p>
         </div>
       )}
 

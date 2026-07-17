@@ -81,7 +81,7 @@ export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () =
       >
         {TASK_STATUSES.map((s) => (
           <option key={s.value} value={s.value}>
-            {s.emoji} {s.label}
+            {s.label}
           </option>
         ))}
       </select>

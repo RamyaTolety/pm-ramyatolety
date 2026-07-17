@@ -75,7 +75,7 @@ function BoardContent({ projectId }: { projectId: string }) {
             href={`/projects/${projectId}/insights`}
             className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-violet-50 hover:text-violet-700"
           >
-            📊 Insights
+            Insights
           </Link>
           <NewTaskForm
             projectId={projectId}
@@ -134,8 +134,7 @@ function BoardContent({ projectId }: { projectId: string }) {
               dragOverStatus === status.value ? "bg-violet-50" : ""
             }`}
           >
-            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600">
-              <span aria-hidden>{status.emoji}</span>
+            <h2 className="text-sm font-semibold text-neutral-600">
               {status.label} ({filteredTasks.filter((t) => t.status === status.value).length})
             </h2>
             <div className="space-y-2">
