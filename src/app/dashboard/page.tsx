@@ -25,7 +25,7 @@ function DashboardContent() {
   const visible = projects.filter((p) => p.archived === showArchived);
 
   return (
-    <div className="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8">
+    <div className="animate-fade-in-up mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8">
       <FocusCard focusTask={focusTask} shippedThisWeek={shippedThisWeek} />
 
       <div className="flex items-center justify-between">

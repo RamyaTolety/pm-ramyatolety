@@ -4,6 +4,10 @@ _Chart the course. Ship the work._
 
 A project management platform built for Phase 1 Project 1 of the Hult Cohort Developer Program.
 
+**The story:** every project is a route, every task a leg of the journey, and your team is the crew.
+Finishing work should feel like logging a leg of a voyage, not just checking a box — that's the
+thread behind the Focus widget, the Voyage Log, and the Conditions indicator below.
+
 ## Reviewer login
 
 No need to sign up — use the seeded account to explore immediately:
@@ -44,7 +48,9 @@ a due date, so the board, filters, and Focus widget all have real data on first 
 - Colored task labels (Bug/Feature/Docs/Urgent/Design), filterable on the board
 - Subtask checklists per task, with a progress bar
 - Project templates on creation (Blank / Sprint Board / Bug Tracker) that pre-populate starter tasks
-- Per-project **Insights** page: 7-day completion chart, average cycle time, breakdown by assignee
+- Per-project **Insights** page: 7-day completion chart, average cycle time, breakdown by assignee, and a **Conditions** indicator ("Smooth sailing" / "Choppy waters" / "Storm warning") computed from the overdue ratio
+- **Voyage Log**: a per-project activity timeline — tasks created/completed, comments, checklist items checked off — assembled chronologically from real data, not a synthetic feed
+- A completion toast alongside the confetti when you finish a task
 - Cross-project "My Tasks" view, filterable by project, status, and assignee
 
 ## Local setup

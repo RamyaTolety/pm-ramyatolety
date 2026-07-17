@@ -38,6 +38,7 @@ export interface ChecklistItem {
   text: string;
   done: boolean;
   createdAt: number;
+  completedAt: number | null;
 }
 
 export const TASK_LABELS: { value: TaskLabel; label: string; classes: string }[] = [

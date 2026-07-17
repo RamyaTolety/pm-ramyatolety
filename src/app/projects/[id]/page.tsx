@@ -8,6 +8,7 @@ import { Navbar } from "@/components/Navbar";
 import { NewTaskForm } from "@/components/NewTaskForm";
 import { RequireAuth } from "@/components/RequireAuth";
 import { TaskCard } from "@/components/TaskCard";
+import { Toast } from "@/components/Toast";
 import { subscribeToProject, subscribeToProjectTasks, updateTaskStatus } from "@/lib/firestore";
 import type { Project, Task, TaskLabel, TaskStatus } from "@/lib/types";
 import { TASK_LABELS, TASK_STATUSES } from "@/lib/types";
@@ -18,8 +19,16 @@ function BoardContent({ projectId }: { projectId: string }) {
   const [assigneeFilter, setAssigneeFilter] = useState("");
   const [labelFilter, setLabelFilter] = useState<TaskLabel | "">("");
   const [celebration, setCelebration] = useState(0);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastKey, setToastKey] = useState(0);
   const [newTaskOpen, setNewTaskOpen] = useState(false);
   const [dragOverStatus, setDragOverStatus] = useState<TaskStatus | null>(null);
+
+  function celebrate(title: string) {
+    setCelebration((n) => n + 1);
+    setToastMessage(`Waypoint reached — "${title}" is done`);
+    setToastKey((k) => k + 1);
+  }
 
   useEffect(() => subscribeToProject(projectId, setProject), [projectId]);
   useEffect(() => subscribeToProjectTasks(projectId, setTasks), [projectId]);
@@ -56,13 +65,15 @@ function BoardContent({ projectId }: { projectId: string }) {
     if (!taskId || fromStatus === status) return;
     updateTaskStatus(projectId, taskId, status);
     if (status === "done" && fromStatus !== "done") {
-      setCelebration((n) => n + 1);
+      const droppedTask = tasks.find((t) => t.id === taskId);
+      celebrate(droppedTask?.title ?? "Task");
     }
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-8">
+    <div className="animate-fade-in-up mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-8">
       <Confetti trigger={celebration} />
+      <Toast message={toastMessage} trigger={toastKey} />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-violet-950">{project.name}</h1>
@@ -71,6 +82,12 @@ function BoardContent({ projectId }: { projectId: string }) {
           )}
         </div>
         <div className="flex items-center gap-2">
+          <Link
+            href={`/projects/${projectId}/log`}
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-violet-50 hover:text-violet-700"
+          >
+            Voyage Log
+          </Link>
           <Link
             href={`/projects/${projectId}/insights`}
             className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-violet-50 hover:text-violet-700"
@@ -141,11 +158,7 @@ function BoardContent({ projectId }: { projectId: string }) {
               {filteredTasks
                 .filter((t) => t.status === status.value)
                 .map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    onCompleted={() => setCelebration((n) => n + 1)}
-                  />
+                  <TaskCard key={task.id} task={task} onCompleted={celebrate} />
                 ))}
             </div>
           </div>

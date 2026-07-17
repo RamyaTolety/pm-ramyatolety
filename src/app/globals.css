@@ -15,4 +15,41 @@
 body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  background-color: #faf9ff;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(196, 181, 253, 0.35) 0px, transparent 55%),
+    radial-gradient(at 100% 0%, rgba(244, 114, 182, 0.14) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(196, 181, 253, 0.28) 0px, transparent 55%),
+    radial-gradient(at 0% 100%, rgba(221, 214, 254, 0.45) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out both;
 }

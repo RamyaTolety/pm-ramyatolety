@@ -23,7 +23,13 @@ function dueDateInfo(dueDate: number | null) {
   return { label: `Due ${label}`, classes: "bg-neutral-100 text-neutral-500" };
 }
 
-export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () => void }) {
+export function TaskCard({
+  task,
+  onCompleted,
+}: {
+  task: Task;
+  onCompleted?: (title: string) => void;
+}) {
   const [showComments, setShowComments] = useState(false);
   const [showChecklist, setShowChecklist] = useState(false);
   const status = TASK_STATUSES.find((s) => s.value === task.status);
@@ -32,7 +38,7 @@ export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () =
   function handleStatusChange(next: TaskStatus) {
     updateTaskStatus(task.projectId, task.id, next);
     if (next === "done" && task.status !== "done") {
-      onCompleted?.();
+      onCompleted?.(task.title);
     }
   }
 
@@ -43,7 +49,7 @@ export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () =
         e.dataTransfer.setData("text/task-id", task.id);
         e.dataTransfer.setData("text/from-status", task.status);
       }}
-      className={`cursor-grab space-y-2 rounded-md border border-t-4 border-neutral-200 bg-white p-3 text-sm shadow-sm active:cursor-grabbing ${status?.accent ?? ""}`}
+      className={`animate-fade-in-up cursor-grab space-y-2 rounded-md border border-t-4 border-neutral-200 bg-white p-3 text-sm shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${status?.accent ?? ""}`}
     >
       {task.labels?.length > 0 && (
         <div className="flex flex-wrap gap-1">

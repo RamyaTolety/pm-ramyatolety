@@ -55,6 +55,34 @@ function InsightsContent({ projectId }: { projectId: string }) {
     return totalMs / done.length / (60 * 60 * 1000);
   }, [tasks]);
 
+  const conditions = useMemo(() => {
+    const incomplete = tasks.filter((t) => t.status !== "done");
+    if (tasks.length === 0) {
+      return { label: "Calm harbor", note: "Nothing logged yet.", classes: "bg-slate-100 text-slate-600" };
+    }
+    if (incomplete.length === 0) {
+      return { label: "Smooth sailing", note: "Everything shipped.", classes: "bg-emerald-100 text-emerald-700" };
+    }
+    const now = Date.now();
+    const overdue = incomplete.filter((t) => t.dueDate && t.dueDate < now).length;
+    const ratio = overdue / incomplete.length;
+    if (ratio === 0) {
+      return { label: "Smooth sailing", note: "No overdue tasks.", classes: "bg-emerald-100 text-emerald-700" };
+    }
+    if (ratio < 0.34) {
+      return {
+        label: "Choppy waters",
+        note: `${overdue} of ${incomplete.length} open tasks overdue.`,
+        classes: "bg-amber-100 text-amber-700",
+      };
+    }
+    return {
+      label: "Storm warning",
+      note: `${overdue} of ${incomplete.length} open tasks overdue.`,
+      classes: "bg-rose-100 text-rose-700",
+    };
+  }, [tasks]);
+
   if (project === undefined) {
     return <p className="p-8 text-center text-neutral-500">Loading…</p>;
   }
@@ -63,7 +91,7 @@ function InsightsContent({ projectId }: { projectId: string }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl flex-1 space-y-8 px-4 py-8">
+    <div className="animate-fade-in-up mx-auto w-full max-w-4xl flex-1 space-y-8 px-4 py-8">
       <div>
         <Link
           href={`/projects/${projectId}`}
@@ -74,6 +102,13 @@ function InsightsContent({ projectId }: { projectId: string }) {
         <h1 className="mt-1 text-2xl font-bold text-violet-950">
           {project.name} · Insights
         </h1>
+      </div>
+
+      <div className="flex items-center gap-3 rounded-xl border border-violet-100 bg-white p-4">
+        <span className={`rounded-full px-3 py-1 text-sm font-semibold ${conditions.classes}`}>
+          {conditions.label}
+        </span>
+        <span className="text-sm text-neutral-500">{conditions.note}</span>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">

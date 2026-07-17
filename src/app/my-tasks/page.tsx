@@ -47,7 +47,7 @@ function MyTasksContent() {
   }, [projects, tasksByProject, projectFilter, statusFilter, assigneeFilter]);
 
   return (
-    <div className="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8">
+    <div className="animate-fade-in-up mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8">
       <h1 className="text-2xl font-bold text-violet-950">My Tasks</h1>
 
       <div className="flex flex-wrap gap-4 text-sm">

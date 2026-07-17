@@ -33,7 +33,7 @@ export function ProjectCard({ project }: { project: Project }) {
   }
 
   return (
-    <div className="space-y-3 rounded-xl border border-violet-100 bg-white p-4 shadow-sm shadow-violet-100/40 transition hover:shadow-md hover:shadow-violet-100/60">
+    <div className="animate-fade-in-up space-y-3 rounded-xl border border-violet-100 bg-white p-4 shadow-sm shadow-violet-100/40 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-violet-100/60">
       <div className="flex items-start justify-between">
         {editing ? (
           <form onSubmit={handleSaveEdit} className="flex-1 space-y-2 pr-2">

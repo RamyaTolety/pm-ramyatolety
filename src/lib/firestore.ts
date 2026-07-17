@@ -149,7 +149,7 @@ export function subscribeToChecklist(
 
 export async function addChecklistItem(projectId: string, taskId: string, text: string) {
   const itemsRef = collection(db, "projects", projectId, "tasks", taskId, "checklistItems");
-  return addDoc(itemsRef, { text, done: false, createdAt: Date.now() });
+  return addDoc(itemsRef, { text, done: false, createdAt: Date.now(), completedAt: null });
 }
 
 export async function toggleChecklistItem(
@@ -159,5 +159,5 @@ export async function toggleChecklistItem(
   done: boolean
 ) {
   const itemRef = doc(db, "projects", projectId, "tasks", taskId, "checklistItems", itemId);
-  return updateDoc(itemRef, { done });
+  return updateDoc(itemRef, { done, completedAt: done ? Date.now() : null });
 }

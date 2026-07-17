@@ -55,7 +55,7 @@ export function NewTaskForm({
     return (
       <button
         onClick={() => onOpenChange(true)}
-        className="rounded-md bg-violet-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-violet-700"
+        className="rounded-md bg-violet-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-violet-700"
       >
         + New task <span className="opacity-60">(n)</span>
       </button>
@@ -122,7 +122,7 @@ export function NewTaskForm({
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-md bg-violet-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
+          className="rounded-md bg-violet-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-violet-700 disabled:opacity-50"
         >
           Create
         </button>
