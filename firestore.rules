@@ -24,6 +24,10 @@ service cloud.firestore {
 
       match /tasks/{taskId} {
         allow read, create, update, delete: if isMember(get(/databases/$(database)/documents/projects/$(projectId)).data);
+
+        match /comments/{commentId} {
+          allow read, create: if isMember(get(/databases/$(database)/documents/projects/$(projectId)).data);
+        }
       }
     }
   }

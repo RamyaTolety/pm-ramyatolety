@@ -1,12 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import { updateTaskStatus } from "@/lib/firestore";
 import type { Task, TaskStatus } from "@/lib/types";
 import { TASK_STATUSES } from "@/lib/types";
 import { Avatar } from "./Avatar";
+import { TaskComments } from "./TaskComments";
+
+function dueDateInfo(dueDate: number | null) {
+  if (!dueDate) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const due = new Date(dueDate);
+  due.setHours(0, 0, 0, 0);
+  const diffDays = Math.round((due.getTime() - today.getTime()) / 86_400_000);
+  const label = due.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+
+  if (diffDays < 0) return { label: `Overdue · ${label}`, classes: "bg-rose-100 text-rose-700" };
+  if (diffDays === 0) return { label: `Due today`, classes: "bg-amber-100 text-amber-700" };
+  if (diffDays <= 3) return { label: `Due ${label}`, classes: "bg-amber-50 text-amber-600" };
+  return { label: `Due ${label}`, classes: "bg-neutral-100 text-neutral-500" };
+}
 
 export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () => void }) {
+  const [showComments, setShowComments] = useState(false);
   const status = TASK_STATUSES.find((s) => s.value === task.status);
+  const due = dueDateInfo(task.dueDate);
 
   function handleStatusChange(next: TaskStatus) {
     updateTaskStatus(task.projectId, task.id, next);
@@ -17,20 +36,25 @@ export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () =
 
   return (
     <div
-      className={`space-y-2 rounded-md border border-t-4 border-neutral-200 bg-white p-3 text-sm shadow-sm ${status?.accent ?? ""}`}
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData("text/task-id", task.id);
+        e.dataTransfer.setData("text/from-status", task.status);
+      }}
+      className={`cursor-grab space-y-2 rounded-md border border-t-4 border-neutral-200 bg-white p-3 text-sm shadow-sm active:cursor-grabbing ${status?.accent ?? ""}`}
     >
       <p className="font-medium">{task.title}</p>
       {task.description && <p className="text-neutral-500">{task.description}</p>}
-      <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-        {task.assigneeEmail ? (
-          <>
-            <Avatar email={task.assigneeEmail} />
-            <span>{task.assigneeEmail}</span>
-          </>
-        ) : (
-          "Unassigned"
+
+      <div className="flex flex-wrap items-center gap-1.5">
+        {task.assigneeEmail && <Avatar email={task.assigneeEmail} />}
+        {due && (
+          <span className={`rounded-full px-1.5 py-0.5 text-[11px] font-medium ${due.classes}`}>
+            {due.label}
+          </span>
         )}
       </div>
+
       <select
         value={task.status}
         onChange={(e) => handleStatusChange(e.target.value as TaskStatus)}
@@ -42,6 +66,14 @@ export function TaskCard({ task, onCompleted }: { task: Task; onCompleted?: () =
           </option>
         ))}
       </select>
+
+      <button
+        onClick={() => setShowComments((v) => !v)}
+        className="text-[11px] text-neutral-400 hover:text-violet-600"
+      >
+        {showComments ? "Hide comments" : "Comments"}
+      </button>
+      {showComments && <TaskComments projectId={task.projectId} taskId={task.id} />}
     </div>
   );
 }

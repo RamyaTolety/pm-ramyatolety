@@ -18,8 +18,16 @@ export interface Task {
   description: string;
   status: TaskStatus;
   assigneeEmail: string | null;
+  dueDate: number | null;
   createdAt: number;
   updatedAt: number;
+}
+
+export interface Comment {
+  id: string;
+  authorEmail: string;
+  text: string;
+  createdAt: number;
 }
 
 export const TASK_STATUSES: {

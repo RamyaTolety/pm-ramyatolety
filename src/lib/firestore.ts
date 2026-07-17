@@ -9,7 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Project, Task, TaskStatus } from "./types";
+import type { Comment, Project, Task, TaskStatus } from "./types";
 
 const projectsRef = collection(db, "projects");
 
@@ -73,7 +73,12 @@ export function subscribeToProjectTasks(
 
 export async function createTask(
   projectId: string,
-  params: { title: string; description: string; assigneeEmail: string | null }
+  params: {
+    title: string;
+    description: string;
+    assigneeEmail: string | null;
+    dueDate: number | null;
+  }
 ) {
   const tasksRef = collection(db, "projects", projectId, "tasks");
   return addDoc(tasksRef, {
@@ -81,6 +86,7 @@ export async function createTask(
     description: params.description,
     status: "todo" as TaskStatus,
     assigneeEmail: params.assigneeEmail,
+    dueDate: params.dueDate,
     createdAt: Date.now(),
     updatedAt: Date.now(),
   });
@@ -94,8 +100,33 @@ export async function updateTaskStatus(projectId: string, taskId: string, status
 export async function updateTask(
   projectId: string,
   taskId: string,
-  updates: Partial<Pick<Task, "title" | "description" | "assigneeEmail" | "status">>
+  updates: Partial<Pick<Task, "title" | "description" | "assigneeEmail" | "status" | "dueDate">>
 ) {
   const taskRef = doc(db, "projects", projectId, "tasks", taskId);
   return updateDoc(taskRef, { ...updates, updatedAt: Date.now() });
+}
+
+export function subscribeToComments(
+  projectId: string,
+  taskId: string,
+  callback: (comments: Comment[]) => void
+) {
+  const commentsRef = collection(db, "projects", projectId, "tasks", taskId, "comments");
+  const q = query(commentsRef, orderBy("createdAt", "asc"));
+  return onSnapshot(q, (snap) => {
+    callback(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Comment)));
+  });
+}
+
+export async function addComment(
+  projectId: string,
+  taskId: string,
+  params: { authorEmail: string; text: string }
+) {
+  const commentsRef = collection(db, "projects", projectId, "tasks", taskId, "comments");
+  return addDoc(commentsRef, {
+    authorEmail: params.authorEmail,
+    text: params.text,
+    createdAt: Date.now(),
+  });
 }
