@@ -15,9 +15,12 @@ service cloud.firestore {
         && request.auth.token.email == request.resource.data.ownerEmail
         && request.auth.token.email in request.resource.data.memberEmails;
 
-      // Members can update (e.g. archive, add members); membership itself
-      // can only grow, never be used to remove other members' access.
-      allow update: if isMember(resource.data);
+      // Members can update (e.g. archive, add members, edit name/description),
+      // but ownerEmail is immutable via update — otherwise any member could
+      // rewrite ownership onto themselves and then delete the project, since
+      // delete only checks ownerEmail.
+      allow update: if isMember(resource.data)
+        && request.resource.data.ownerEmail == resource.data.ownerEmail;
 
       allow delete: if request.auth != null
         && request.auth.token.email == resource.data.ownerEmail;
