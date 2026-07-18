@@ -13,12 +13,24 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 function forecastLevel(dueCount: number, ratio: number) {
   if (dueCount === 0 || ratio <= 1) {
-    return { condition: "Smooth sailing", classes: "bg-emerald-100 text-emerald-700", Icon: SailboatIcon };
+    return {
+      condition: "Smooth sailing",
+      classes: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+      Icon: SailboatIcon,
+    };
   }
   if (ratio < 2) {
-    return { condition: "Choppy waters", classes: "bg-amber-100 text-amber-700", Icon: WavesIcon };
+    return {
+      condition: "Choppy waters",
+      classes: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+      Icon: WavesIcon,
+    };
   }
-  return { condition: "Storm warning", classes: "bg-rose-100 text-rose-700", Icon: WavesIcon };
+  return {
+    condition: "Storm warning",
+    classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
+    Icon: WavesIcon,
+  };
 }
 
 function InsightsContent({ projectId }: { projectId: string }) {
@@ -72,7 +84,7 @@ function InsightsContent({ projectId }: { projectId: string }) {
       return {
         label: "Calm harbor",
         note: "Nothing logged yet.",
-        classes: "bg-slate-100 text-slate-600",
+        classes: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
         Icon: AnchorIcon,
       };
     }
@@ -80,7 +92,7 @@ function InsightsContent({ projectId }: { projectId: string }) {
       return {
         label: "Smooth sailing",
         note: "Everything shipped.",
-        classes: "bg-emerald-100 text-emerald-700",
+        classes: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
         Icon: SailboatIcon,
       };
     }
@@ -91,7 +103,7 @@ function InsightsContent({ projectId }: { projectId: string }) {
       return {
         label: "Smooth sailing",
         note: "No overdue tasks.",
-        classes: "bg-emerald-100 text-emerald-700",
+        classes: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
         Icon: SailboatIcon,
       };
     }
@@ -99,14 +111,14 @@ function InsightsContent({ projectId }: { projectId: string }) {
       return {
         label: "Choppy waters",
         note: `${overdue} of ${incomplete.length} open tasks overdue.`,
-        classes: "bg-amber-100 text-amber-700",
+        classes: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
         Icon: WavesIcon,
       };
     }
     return {
       label: "Storm warning",
       note: `${overdue} of ${incomplete.length} open tasks overdue.`,
-      classes: "bg-rose-100 text-rose-700",
+      classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
       Icon: WavesIcon,
     };
   }, [tasks]);
@@ -132,10 +144,10 @@ function InsightsContent({ projectId }: { projectId: string }) {
   }, [tasks, dailyCompleted]);
 
   if (project === undefined) {
-    return <p className="p-8 text-center text-neutral-500">Loading…</p>;
+    return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Loading…</p>;
   }
   if (project === null) {
-    return <p className="p-8 text-center text-neutral-500">Project not found.</p>;
+    return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Project not found.</p>;
   }
 
   return (
@@ -143,37 +155,37 @@ function InsightsContent({ projectId }: { projectId: string }) {
       <div>
         <Link
           href={`/projects/${projectId}`}
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-blue-600 hover:underline dark:text-blue-400"
         >
           ← Back to board
         </Link>
-        <h1 className="mt-1 text-2xl font-bold text-blue-950">
+        <h1 className="mt-1 text-2xl font-bold text-blue-950 dark:text-blue-100">
           {project.name} · Insights
         </h1>
       </div>
 
-      <div className="flex items-center gap-3 rounded-xl border border-blue-100 bg-white p-4">
+      <div className="flex items-center gap-3 rounded-xl border border-blue-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
         <conditions.Icon className="h-5 w-5 shrink-0 text-blue-400" />
         <span className={`rounded-full px-3 py-1 text-sm font-semibold ${conditions.classes}`}>
           {conditions.label}
         </span>
-        <span className="text-sm text-neutral-500">{conditions.note}</span>
+        <span className="text-sm text-neutral-500 dark:text-slate-400">{conditions.note}</span>
       </div>
 
-      <div className="rounded-xl border border-blue-100 bg-white p-5">
-        <h2 className="mb-3 text-sm font-semibold text-neutral-700">7-day forecast</h2>
+      <div className="rounded-xl border border-blue-100 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+        <h2 className="mb-3 text-sm font-semibold text-neutral-700 dark:text-slate-300">7-day forecast</h2>
         <div className="grid grid-cols-7 gap-2">
           {forecast.map((day, i) => (
             <div
               key={i}
               title={`${day.condition} · ${day.dueCount} task${day.dueCount === 1 ? "" : "s"} due`}
-              className="flex flex-col items-center gap-1.5 rounded-lg border border-neutral-100 py-3"
+              className="flex flex-col items-center gap-1.5 rounded-lg border border-neutral-100 py-3 dark:border-slate-800"
             >
-              <p className="text-[11px] font-medium text-neutral-500">{day.label}</p>
+              <p className="text-[11px] font-medium text-neutral-500 dark:text-slate-400">{day.label}</p>
               <span className={`flex h-8 w-8 items-center justify-center rounded-full ${day.classes}`}>
                 <day.Icon className="h-4 w-4" />
               </span>
-              <p className="text-[11px] text-neutral-400">
+              <p className="text-[11px] text-neutral-400 dark:text-slate-500">
                 {day.dueCount || "—"}
               </p>
             </div>
@@ -182,26 +194,26 @@ function InsightsContent({ projectId }: { projectId: string }) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-blue-100 bg-white p-4">
-          <p className="text-2xl font-bold text-blue-950">{tasks.length}</p>
-          <p className="text-xs text-neutral-500">total tasks</p>
+        <div className="rounded-xl border border-blue-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <p className="text-2xl font-bold text-blue-950 dark:text-blue-100">{tasks.length}</p>
+          <p className="text-xs text-neutral-500 dark:text-slate-400">total tasks</p>
         </div>
-        <div className="rounded-xl border border-blue-100 bg-white p-4">
-          <p className="text-2xl font-bold text-blue-950">
+        <div className="rounded-xl border border-blue-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <p className="text-2xl font-bold text-blue-950 dark:text-blue-100">
             {tasks.filter((t) => t.status === "done").length}
           </p>
-          <p className="text-xs text-neutral-500">completed</p>
+          <p className="text-xs text-neutral-500 dark:text-slate-400">completed</p>
         </div>
-        <div className="rounded-xl border border-blue-100 bg-white p-4">
-          <p className="text-2xl font-bold text-blue-950">
+        <div className="rounded-xl border border-blue-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <p className="text-2xl font-bold text-blue-950 dark:text-blue-100">
             {avgCycleTimeHours === null ? "—" : `${avgCycleTimeHours.toFixed(1)}h`}
           </p>
-          <p className="text-xs text-neutral-500">avg. cycle time</p>
+          <p className="text-xs text-neutral-500 dark:text-slate-400">avg. cycle time</p>
         </div>
       </div>
 
-      <div className="rounded-xl border border-blue-100 bg-white p-5">
-        <h2 className="mb-3 text-sm font-semibold text-neutral-700">Completed, last 7 days</h2>
+      <div className="rounded-xl border border-blue-100 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+        <h2 className="mb-3 text-sm font-semibold text-neutral-700 dark:text-slate-300">Completed, last 7 days</h2>
         <div className="flex h-32 items-end gap-3">
           {dailyCompleted.map((day) => (
             <div key={day.label} className="flex flex-1 flex-col items-center gap-1">
@@ -211,29 +223,29 @@ function InsightsContent({ projectId }: { projectId: string }) {
                   style={{ height: `${(day.count / maxDaily) * 100}%`, minHeight: day.count ? 4 : 0 }}
                 />
               </div>
-              <p className="text-[11px] text-neutral-500">{day.label}</p>
-              <p className="text-[11px] font-medium text-neutral-700">{day.count}</p>
+              <p className="text-[11px] text-neutral-500 dark:text-slate-400">{day.label}</p>
+              <p className="text-[11px] font-medium text-neutral-700 dark:text-slate-300">{day.count}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="rounded-xl border border-blue-100 bg-white p-5">
-        <h2 className="mb-3 text-sm font-semibold text-neutral-700">By assignee</h2>
+      <div className="rounded-xl border border-blue-100 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+        <h2 className="mb-3 text-sm font-semibold text-neutral-700 dark:text-slate-300">By assignee</h2>
         {byAssignee.length === 0 ? (
-          <p className="text-sm text-neutral-400">No tasks yet.</p>
+          <p className="text-sm text-neutral-400 dark:text-slate-500">No tasks yet.</p>
         ) : (
           <div className="space-y-2">
             {byAssignee.map(([email, stats]) => (
               <div key={email} className="flex items-center gap-3 text-sm">
-                <span className="w-48 truncate text-neutral-700">{email}</span>
-                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-100">
+                <span className="w-48 truncate text-neutral-700 dark:text-slate-300">{email}</span>
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-100 dark:bg-slate-800">
                   <div
                     className="h-full rounded-full bg-blue-500"
                     style={{ width: `${(stats.done / stats.total) * 100}%` }}
                   />
                 </div>
-                <span className="w-16 text-right text-xs text-neutral-500">
+                <span className="w-16 text-right text-xs text-neutral-500 dark:text-slate-400">
                   {stats.done}/{stats.total}
                 </span>
               </div>

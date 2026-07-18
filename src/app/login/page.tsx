@@ -46,12 +46,12 @@ export default function LoginPage() {
       <div className="animate-fade-in-up flex max-w-md flex-col justify-center text-center md:text-left">
         <SailboatIcon className="mx-auto h-10 w-10 text-blue-400 md:mx-0" />
         <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-blue-500">Waypoint</p>
-        <h1 className="mt-2 text-3xl font-bold leading-tight text-blue-950 sm:text-4xl">
+        <h1 className="mt-2 text-3xl font-bold leading-tight text-blue-950 sm:text-4xl dark:text-blue-100">
           Chart the course.
           <br />
           Ship the work.
         </h1>
-        <p className="mt-4 text-sm text-neutral-600">
+        <p className="mt-4 text-sm text-neutral-600 dark:text-slate-400">
           Every project is a route. Every task, a leg of the journey. Your crew ships
           together — Waypoint keeps the course clear.
         </p>
@@ -63,12 +63,12 @@ export default function LoginPage() {
               className="animate-fade-in-up flex items-start gap-3"
               style={{ animationDelay: `${i * 0.12}s` }}
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-300">
                 <step.Icon className="h-4 w-4" />
               </span>
               <div>
-                <p className="text-sm font-semibold text-blue-950">{step.label}</p>
-                <p className="text-xs text-neutral-500">{step.detail}</p>
+                <p className="text-sm font-semibold text-blue-950 dark:text-blue-100">{step.label}</p>
+                <p className="text-xs text-neutral-500 dark:text-slate-400">{step.detail}</p>
               </div>
             </li>
           ))}
@@ -77,37 +77,37 @@ export default function LoginPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="animate-fade-in-up w-full max-w-sm space-y-4 self-center rounded-xl border border-blue-100 bg-white p-6 shadow-lg shadow-blue-200/40"
+        className="animate-fade-in-up w-full max-w-sm space-y-4 self-center rounded-xl border border-blue-100 bg-white p-6 shadow-lg shadow-blue-200/40 dark:border-slate-700 dark:bg-slate-900 dark:shadow-none"
         style={{ animationDelay: "0.2s" }}
       >
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-lg font-semibold dark:text-slate-100">
           {mode === "login" ? "Log in" : "Create account"}
         </h2>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium text-neutral-700">Email</label>
+          <label className="text-sm font-medium text-neutral-700 dark:text-slate-300">Email</label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
           />
         </div>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium text-neutral-700">Password</label>
+          <label className="text-sm font-medium text-neutral-700 dark:text-slate-300">Password</label>
           <input
             type="password"
             required
             minLength={6}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
           />
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
         <button
           type="submit"
@@ -120,7 +120,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => setMode(mode === "login" ? "signup" : "login")}
-          className="w-full text-center text-sm text-neutral-600 hover:text-blue-700 hover:underline"
+          className="w-full text-center text-sm text-neutral-600 hover:text-blue-700 hover:underline dark:text-slate-400 dark:hover:text-blue-300"
         >
           {mode === "login" ? "Need an account? Sign up" : "Already have an account? Log in"}
         </button>

@@ -65,7 +65,7 @@ export function NewTaskForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-2 rounded-lg border border-neutral-200 bg-white p-3"
+      className="space-y-2 rounded-lg border border-neutral-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900"
     >
       <input
         autoFocus
@@ -73,13 +73,13 @@ export function NewTaskForm({
         placeholder="Task title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+        className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
       />
       <textarea
         placeholder="Description (optional)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+        className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         rows={2}
       />
       <div className="flex flex-wrap gap-1.5">
@@ -91,7 +91,7 @@ export function NewTaskForm({
             className={`rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
               labels.includes(l.value)
                 ? l.classes + " ring-transparent"
-                : "bg-transparent text-neutral-400 ring-neutral-200"
+                : "bg-transparent text-neutral-400 ring-neutral-200 dark:text-slate-500 dark:ring-slate-700"
             }`}
           >
             {l.label}
@@ -102,7 +102,7 @@ export function NewTaskForm({
         <select
           value={assigneeEmail}
           onChange={(e) => setAssigneeEmail(e.target.value)}
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         >
           <option value="">Unassigned</option>
           {memberEmails.map((email) => (
@@ -115,7 +115,7 @@ export function NewTaskForm({
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
-          className="rounded-md border border-neutral-300 px-2 py-1 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="rounded-md border border-neutral-300 px-2 py-1 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40 dark:[color-scheme:dark]"
         />
       </div>
       <div className="flex gap-2">
@@ -129,7 +129,7 @@ export function NewTaskForm({
         <button
           type="button"
           onClick={() => onOpenChange(false)}
-          className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
+          className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:text-slate-300"
         >
           Cancel
         </button>

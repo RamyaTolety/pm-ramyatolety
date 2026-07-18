@@ -130,6 +130,23 @@ export const PORT_ICON_COMPONENTS: Record<PortIcon, typeof CompassIcon> = {
   flag: FlagIcon,
 };
 
+export function MoonIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+    </svg>
+  );
+}
+
 export function CrewIcon({ className }: IconProps) {
   return (
     <svg

@@ -49,15 +49,15 @@ function MyTasksContent() {
 
   return (
     <div className="animate-fade-in-up mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8">
-      <h1 className="text-2xl font-bold text-blue-950">My Tasks</h1>
+      <h1 className="text-2xl font-bold text-blue-950 dark:text-blue-100">My Tasks</h1>
 
-      <div className="flex flex-wrap gap-4 text-sm">
+      <div className="flex flex-wrap gap-4 text-sm dark:text-slate-300">
         <label className="flex items-center gap-2">
           Project
           <select
             value={projectFilter}
             onChange={(e) => setProjectFilter(e.target.value)}
-            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
           >
             <option value="">All</option>
             {projects.map((p) => (
@@ -73,7 +73,7 @@ function MyTasksContent() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as TaskStatus | "")}
-            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
           >
             <option value="">All</option>
             {TASK_STATUSES.map((s) => (
@@ -89,7 +89,7 @@ function MyTasksContent() {
           <select
             value={assigneeFilter}
             onChange={(e) => setAssigneeFilter(e.target.value)}
-            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
           >
             <option value="">Everyone</option>
             {allMemberEmails.map((email) => (
@@ -102,9 +102,9 @@ function MyTasksContent() {
       </div>
 
       {rows.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center">
-          <WavesIcon className="mx-auto h-8 w-8 text-blue-300" />
-          <p className="mt-2 text-sm text-neutral-600">No tasks match these filters — clear one to see more.</p>
+        <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center dark:border-slate-700 dark:bg-slate-900/40">
+          <WavesIcon className="mx-auto h-8 w-8 text-blue-300 dark:text-slate-600" />
+          <p className="mt-2 text-sm text-neutral-600 dark:text-slate-400">No tasks match these filters — clear one to see more.</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -112,15 +112,15 @@ function MyTasksContent() {
             <Link
               key={task.id}
               href={`/projects/${project.id}`}
-              className="flex items-center justify-between rounded-lg border border-blue-100 bg-white p-3 text-sm shadow-sm shadow-blue-100/40 hover:shadow-md hover:shadow-blue-100/60"
+              className="flex items-center justify-between rounded-lg border border-blue-100 bg-white p-3 text-sm shadow-sm shadow-blue-100/40 hover:shadow-md hover:shadow-blue-100/60 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:shadow-none"
             >
               <div>
                 <p className="font-medium">{task.title}</p>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs text-neutral-500 dark:text-slate-400">
                   {project.name} · {task.assigneeEmail ?? "Unassigned"}
                 </p>
               </div>
-              <span className="rounded-full bg-blue-50 px-2 py-1 text-xs text-blue-700">
+              <span className="rounded-full bg-blue-50 px-2 py-1 text-xs text-blue-700 dark:bg-slate-800 dark:text-blue-300">
                 {TASK_STATUSES.find((s) => s.value === task.status)?.label}
               </span>
             </Link>

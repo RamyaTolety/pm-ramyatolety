@@ -29,13 +29,13 @@ export const PORT_ICONS: { value: PortIcon; label: string }[] = [
 ];
 
 export const PORT_COLORS: { value: PortColor; badge: string; dot: string }[] = [
-  { value: "blue", badge: "bg-blue-100 text-blue-700", dot: "bg-blue-500" },
-  { value: "cyan", badge: "bg-cyan-100 text-cyan-700", dot: "bg-cyan-500" },
-  { value: "teal", badge: "bg-teal-100 text-teal-700", dot: "bg-teal-500" },
-  { value: "emerald", badge: "bg-emerald-100 text-emerald-700", dot: "bg-emerald-500" },
-  { value: "amber", badge: "bg-amber-100 text-amber-700", dot: "bg-amber-500" },
-  { value: "rose", badge: "bg-rose-100 text-rose-700", dot: "bg-rose-500" },
-  { value: "slate", badge: "bg-slate-100 text-slate-700", dot: "bg-slate-500" },
+  { value: "blue", badge: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300", dot: "bg-blue-500" },
+  { value: "cyan", badge: "bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300", dot: "bg-cyan-500" },
+  { value: "teal", badge: "bg-teal-100 text-teal-700 dark:bg-teal-950 dark:text-teal-300", dot: "bg-teal-500" },
+  { value: "emerald", badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300", dot: "bg-emerald-500" },
+  { value: "amber", badge: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300", dot: "bg-amber-500" },
+  { value: "rose", badge: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300", dot: "bg-rose-500" },
+  { value: "slate", badge: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300", dot: "bg-slate-500" },
 ];
 
 export const DEFAULT_PORT_ICON: PortIcon = "compass";
@@ -70,11 +70,11 @@ export interface ChecklistItem {
 }
 
 export const TASK_LABELS: { value: TaskLabel; label: string; classes: string }[] = [
-  { value: "bug", label: "Bug", classes: "bg-rose-100 text-rose-700" },
-  { value: "feature", label: "Feature", classes: "bg-emerald-100 text-emerald-700" },
-  { value: "docs", label: "Docs", classes: "bg-sky-100 text-sky-700" },
-  { value: "urgent", label: "Urgent", classes: "bg-orange-100 text-orange-700" },
-  { value: "design", label: "Design", classes: "bg-teal-100 text-teal-700" },
+  { value: "bug", label: "Bug", classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300" },
+  { value: "feature", label: "Feature", classes: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" },
+  { value: "docs", label: "Docs", classes: "bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300" },
+  { value: "urgent", label: "Urgent", classes: "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300" },
+  { value: "design", label: "Design", classes: "bg-teal-100 text-teal-700 dark:bg-teal-950 dark:text-teal-300" },
 ];
 
 export const PROJECT_TEMPLATES: {

@@ -53,7 +53,7 @@ export function OnboardingCarousel() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue-950/40 px-4 backdrop-blur-sm">
-      <div className="animate-fade-in-up w-full max-w-md rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-2xl shadow-blue-900/20">
+      <div className="animate-fade-in-up w-full max-w-md rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-2xl shadow-blue-900/20 dark:border-slate-700 dark:bg-slate-900 dark:shadow-none">
         <div
           key={step}
           className="animate-slide-in-right flex flex-col items-center"
@@ -61,8 +61,8 @@ export function OnboardingCarousel() {
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-white">
             <slide.Icon className="h-8 w-8" />
           </span>
-          <h2 className="mt-5 text-xl font-bold text-blue-950">{slide.title}</h2>
-          <p className="mt-2 text-sm text-neutral-600">{slide.detail}</p>
+          <h2 className="mt-5 text-xl font-bold text-blue-950 dark:text-blue-100">{slide.title}</h2>
+          <p className="mt-2 text-sm text-neutral-600 dark:text-slate-400">{slide.detail}</p>
         </div>
 
         <div className="mt-7 flex items-center justify-center gap-1.5">
@@ -70,7 +70,7 @@ export function OnboardingCarousel() {
             <span
               key={i}
               className={`h-1.5 rounded-full transition-all ${
-                i === step ? "w-5 bg-blue-600" : "w-1.5 bg-blue-100"
+                i === step ? "w-5 bg-blue-600" : "w-1.5 bg-blue-100 dark:bg-slate-700"
               }`}
             />
           ))}
@@ -79,7 +79,7 @@ export function OnboardingCarousel() {
         <div className="mt-7 flex items-center justify-between gap-3">
           <button
             onClick={dismiss}
-            className="text-sm text-neutral-400 hover:text-neutral-600"
+            className="text-sm text-neutral-400 hover:text-neutral-600 dark:text-slate-500 dark:hover:text-slate-300"
           >
             Skip
           </button>

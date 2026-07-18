@@ -27,13 +27,13 @@ export function TaskComments({ projectId, taskId }: { projectId: string; taskId:
   }
 
   return (
-    <div className="space-y-2 border-t border-neutral-100 pt-2">
+    <div className="space-y-2 border-t border-neutral-100 pt-2 dark:border-slate-800">
       {comments.map((c) => (
         <div key={c.id} className="flex items-start gap-1.5 text-xs">
           <Avatar email={c.authorEmail} />
           <div>
-            <span className="font-medium text-neutral-700">{c.authorEmail}</span>{" "}
-            <span className="text-neutral-500">{c.text}</span>
+            <span className="font-medium text-neutral-700 dark:text-slate-300">{c.authorEmail}</span>{" "}
+            <span className="text-neutral-500 dark:text-slate-400">{c.text}</span>
           </div>
         </div>
       ))}
@@ -42,12 +42,12 @@ export function TaskComments({ projectId, taskId }: { projectId: string; taskId:
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Add a comment…"
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         />
         <button
           type="submit"
           disabled={submitting || !text.trim()}
-          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50"
+          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
         >
           Send
         </button>

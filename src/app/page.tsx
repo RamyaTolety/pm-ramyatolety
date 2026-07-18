@@ -13,5 +13,5 @@ export default function Home() {
     router.replace(user ? "/dashboard" : "/login");
   }, [user, loading, router]);
 
-  return <div className="p-8 text-center text-neutral-500">Loading…</div>;
+  return <div className="p-8 text-center text-neutral-500 dark:text-slate-400">Loading…</div>;
 }

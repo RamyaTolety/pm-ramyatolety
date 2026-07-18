@@ -19,7 +19,7 @@ export function PortPicker({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-neutral-600">Port</p>
+      <p className="text-xs font-medium text-neutral-600 dark:text-slate-400">Port</p>
       <div className="flex flex-wrap gap-1.5">
         {PORT_ICONS.map((option) => {
           const Icon = PORT_ICON_COMPONENTS[option.value];
@@ -33,7 +33,7 @@ export function PortPicker({
               className={`flex h-8 w-8 items-center justify-center rounded-full border transition ${
                 active
                   ? `border-transparent ${activeColor.badge}`
-                  : "border-neutral-200 text-neutral-400 hover:border-neutral-300"
+                  : "border-neutral-200 text-neutral-400 hover:border-neutral-300 dark:border-slate-700 dark:text-slate-500 dark:hover:border-slate-600"
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -49,7 +49,7 @@ export function PortPicker({
             title={option.value}
             onClick={() => onColorChange(option.value)}
             className={`h-6 w-6 rounded-full ${option.dot} transition ${
-              color === option.value ? "ring-2 ring-offset-2 ring-neutral-400" : ""
+              color === option.value ? "ring-2 ring-offset-2 ring-neutral-400 dark:ring-offset-slate-900" : ""
             }`}
           />
         ))}

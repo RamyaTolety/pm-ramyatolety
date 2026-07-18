@@ -20,10 +20,13 @@ function dueDateInfo(dueDate: number | null) {
   const diffDays = Math.round((due.getTime() - today.getTime()) / 86_400_000);
   const label = due.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 
-  if (diffDays < 0) return { label: `Overdue · ${label}`, classes: "bg-rose-100 text-rose-700" };
-  if (diffDays === 0) return { label: `Due today`, classes: "bg-amber-100 text-amber-700" };
-  if (diffDays <= 3) return { label: `Due ${label}`, classes: "bg-amber-50 text-amber-600" };
-  return { label: `Due ${label}`, classes: "bg-neutral-100 text-neutral-500" };
+  if (diffDays < 0)
+    return { label: `Overdue · ${label}`, classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300" };
+  if (diffDays === 0)
+    return { label: `Due today`, classes: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300" };
+  if (diffDays <= 3)
+    return { label: `Due ${label}`, classes: "bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400" };
+  return { label: `Due ${label}`, classes: "bg-neutral-100 text-neutral-500 dark:bg-slate-800 dark:text-slate-400" };
 }
 
 function anchorWatchInfo(task: Task) {
@@ -60,7 +63,7 @@ export function TaskCard({
         e.dataTransfer.setData("text/task-id", task.id);
         e.dataTransfer.setData("text/from-status", task.status);
       }}
-      className={`animate-fade-in-up cursor-grab space-y-2 rounded-md border border-t-4 border-neutral-200 bg-white p-3 text-sm shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${status?.accent ?? ""}`}
+      className={`animate-fade-in-up cursor-grab space-y-2 rounded-md border border-t-4 border-neutral-200 bg-white p-3 text-sm text-neutral-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:shadow-none ${status?.accent ?? ""}`}
     >
       {task.labels?.length > 0 && (
         <div className="flex flex-wrap gap-1">
@@ -80,7 +83,7 @@ export function TaskCard({
       )}
 
       <p className="font-medium">{task.title}</p>
-      {task.description && <p className="text-neutral-500">{task.description}</p>}
+      {task.description && <p className="text-neutral-500 dark:text-slate-400">{task.description}</p>}
 
       <div className="flex flex-wrap items-center gap-1.5">
         {task.assigneeEmail && <Avatar email={task.assigneeEmail} />}
@@ -92,7 +95,7 @@ export function TaskCard({
         {anchorWatch && (
           <span
             title="Sitting in To Do for a while"
-            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-500"
+            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400"
           >
             <AnchorIcon className="h-2.5 w-2.5" />
             {anchorWatch.label}
@@ -103,7 +106,7 @@ export function TaskCard({
       <select
         value={task.status}
         onChange={(e) => handleStatusChange(e.target.value as TaskStatus)}
-        className="w-full rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+        className="w-full rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
       >
         {TASK_STATUSES.map((s) => (
           <option key={s.value} value={s.value}>
@@ -115,13 +118,13 @@ export function TaskCard({
       <div className="flex gap-3">
         <button
           onClick={() => setShowChecklist((v) => !v)}
-          className="text-[11px] text-neutral-400 hover:text-blue-600"
+          className="text-[11px] text-neutral-400 hover:text-blue-600 dark:text-slate-500 dark:hover:text-blue-400"
         >
           {showChecklist ? "Hide checklist" : "Checklist"}
         </button>
         <button
           onClick={() => setShowComments((v) => !v)}
-          className="text-[11px] text-neutral-400 hover:text-blue-600"
+          className="text-[11px] text-neutral-400 hover:text-blue-600 dark:text-slate-500 dark:hover:text-blue-400"
         >
           {showComments ? "Hide comments" : "Comments"}
         </button>

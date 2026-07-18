@@ -55,10 +55,10 @@ function BoardContent({ projectId }: { projectId: string }) {
   }, []);
 
   if (project === undefined) {
-    return <p className="p-8 text-center text-neutral-500">Loading…</p>;
+    return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Loading…</p>;
   }
   if (project === null) {
-    return <p className="p-8 text-center text-neutral-500">Project not found.</p>;
+    return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Project not found.</p>;
   }
 
   const filteredTasks = tasks
@@ -86,34 +86,34 @@ function BoardContent({ projectId }: { projectId: string }) {
         <div className="flex items-center gap-3">
           <PortBadge project={project} size="md" />
           <div>
-            <h1 className="text-2xl font-bold text-blue-950">{project.name}</h1>
+            <h1 className="text-2xl font-bold text-blue-950 dark:text-blue-100">{project.name}</h1>
             {project.description && (
-              <p className="text-sm text-neutral-500">{project.description}</p>
+              <p className="text-sm text-neutral-500 dark:text-slate-400">{project.description}</p>
             )}
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href={`/projects/${projectId}/log`}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
           >
             Voyage Log
           </Link>
           <Link
             href={`/projects/${projectId}/insights`}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
           >
             Insights
           </Link>
           <Link
             href={`/projects/${projectId}/crew`}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
           >
             Crew
           </Link>
           <Link
             href={`/projects/${projectId}/timeline`}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
           >
             Route Timeline
           </Link>
@@ -127,11 +127,11 @@ function BoardContent({ projectId }: { projectId: string }) {
       </div>
 
       <div className="flex items-center gap-2 text-sm">
-        <label className="text-neutral-600">Filter by assignee:</label>
+        <label className="text-neutral-600 dark:text-slate-400">Filter by assignee:</label>
         <select
           value={assigneeFilter}
           onChange={(e) => setAssigneeFilter(e.target.value)}
-          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         >
           <option value="">Everyone</option>
           {project.memberEmails.map((email) => (
@@ -141,11 +141,11 @@ function BoardContent({ projectId }: { projectId: string }) {
           ))}
         </select>
 
-        <label className="text-neutral-600">Label:</label>
+        <label className="text-neutral-600 dark:text-slate-400">Label:</label>
         <select
           value={labelFilter}
           onChange={(e) => setLabelFilter(e.target.value as TaskLabel | "")}
-          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         >
           <option value="">All labels</option>
           {TASK_LABELS.map((l) => (
@@ -154,9 +154,9 @@ function BoardContent({ projectId }: { projectId: string }) {
             </option>
           ))}
         </select>
-        <span className="ml-auto text-xs text-neutral-400">
-          Drag cards between columns, or press <kbd className="rounded border px-1">n</kbd> for a
-          new task
+        <span className="ml-auto text-xs text-neutral-400 dark:text-slate-500">
+          Drag cards between columns, or press{" "}
+          <kbd className="rounded border px-1 dark:border-slate-600">n</kbd> for a new task
         </span>
       </div>
 
@@ -171,10 +171,10 @@ function BoardContent({ projectId }: { projectId: string }) {
             onDragLeave={() => setDragOverStatus(null)}
             onDrop={(e) => handleDrop(e, status.value)}
             className={`space-y-3 rounded-lg p-2 transition-colors ${
-              dragOverStatus === status.value ? "bg-blue-50" : ""
+              dragOverStatus === status.value ? "bg-blue-50 dark:bg-slate-800/60" : ""
             }`}
           >
-            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600">
+            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600 dark:text-slate-400">
               {(() => {
                 const StatusIcon = STATUS_ICONS[status.value];
                 return <StatusIcon className="h-4 w-4 text-blue-400" />;

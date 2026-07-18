@@ -38,7 +38,7 @@ export function ProjectCard({ project }: { project: Project }) {
   }
 
   return (
-    <div className="animate-fade-in-up space-y-3 rounded-xl border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100/40 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-100/60">
+    <div className="animate-fade-in-up space-y-3 rounded-xl border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100/40 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-100/60 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
       <div className="flex items-start justify-between">
         {editing ? (
           <form onSubmit={handleSaveEdit} className="flex-1 space-y-2 pr-2">
@@ -46,13 +46,13 @@ export function ProjectCard({ project }: { project: Project }) {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm font-semibold"
+              className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm font-semibold dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             />
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm"
+              className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             />
             <PortPicker
               icon={portIcon}
@@ -76,7 +76,7 @@ export function ProjectCard({ project }: { project: Project }) {
                   setPortColor(project.portColor ?? DEFAULT_PORT_COLOR);
                   setEditing(false);
                 }}
-                className="rounded-md border border-neutral-300 px-2 py-1 text-xs"
+                className="rounded-md border border-neutral-300 px-2 py-1 text-xs dark:border-slate-600 dark:text-slate-300"
               >
                 Cancel
               </button>
@@ -88,12 +88,12 @@ export function ProjectCard({ project }: { project: Project }) {
             <div>
               <Link
                 href={`/projects/${project.id}`}
-                className="font-semibold text-blue-950 hover:text-blue-700 hover:underline"
+                className="font-semibold text-blue-950 hover:text-blue-700 hover:underline dark:text-blue-100 dark:hover:text-blue-300"
               >
                 {project.name}
               </Link>
               {project.description && (
-                <p className="text-sm text-neutral-500">{project.description}</p>
+                <p className="text-sm text-neutral-500 dark:text-slate-400">{project.description}</p>
               )}
             </div>
           </div>
@@ -103,13 +103,13 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="flex shrink-0 gap-2">
             <button
               onClick={() => setEditing(true)}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700"
+              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
             >
               Edit
             </button>
             <button
               onClick={() => updateProject(project.id, { archived: !project.archived })}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700"
+              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
             >
               {project.archived ? "Unarchive" : "Archive"}
             </button>
@@ -119,13 +119,13 @@ export function ProjectCard({ project }: { project: Project }) {
 
       {tasks.length > 0 && (
         <div className="space-y-1">
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-blue-100">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-blue-100 dark:bg-slate-800">
             <div
               className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-slate-400">
             {doneCount}/{tasks.length} tasks done · {progress}%
           </p>
         </div>
@@ -143,7 +143,7 @@ export function ProjectCard({ project }: { project: Project }) {
           placeholder="Add member by email"
           value={memberEmail}
           onChange={(e) => setMemberEmail(e.target.value)}
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         />
         <button
           type="submit"
