@@ -1,3 +1,5 @@
+import type { PortIcon } from "@/lib/types";
+
 type IconProps = { className?: string };
 
 export function HelmIcon({ className }: IconProps) {
@@ -118,6 +120,15 @@ export function CompassIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export const PORT_ICON_COMPONENTS: Record<PortIcon, typeof CompassIcon> = {
+  compass: CompassIcon,
+  helm: HelmIcon,
+  anchor: AnchorIcon,
+  sailboat: SailboatIcon,
+  waves: WavesIcon,
+  flag: FlagIcon,
+};
 
 export function CrewIcon({ className }: IconProps) {
   return (

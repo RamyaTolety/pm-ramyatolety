@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createProject, createTask } from "@/lib/firestore";
-import { PROJECT_TEMPLATES } from "@/lib/types";
+import { DEFAULT_PORT_COLOR, DEFAULT_PORT_ICON, PROJECT_TEMPLATES } from "@/lib/types";
+import type { PortColor, PortIcon } from "@/lib/types";
+import { PortPicker } from "./PortPicker";
 
 export function NewProjectForm() {
   const { user } = useAuth();
@@ -11,6 +13,8 @@ export function NewProjectForm() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [template, setTemplate] = useState(PROJECT_TEMPLATES[0].value);
+  const [portIcon, setPortIcon] = useState<PortIcon>(DEFAULT_PORT_ICON);
+  const [portColor, setPortColor] = useState<PortColor>(DEFAULT_PORT_COLOR);
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -23,6 +27,8 @@ export function NewProjectForm() {
         description,
         ownerId: user.uid,
         ownerEmail: user.email,
+        portIcon,
+        portColor,
       });
       const chosenTemplate = PROJECT_TEMPLATES.find((t) => t.value === template);
       if (chosenTemplate) {
@@ -39,6 +45,8 @@ export function NewProjectForm() {
       setName("");
       setDescription("");
       setTemplate(PROJECT_TEMPLATES[0].value);
+      setPortIcon(DEFAULT_PORT_ICON);
+      setPortColor(DEFAULT_PORT_COLOR);
       setOpen(false);
     } finally {
       setSubmitting(false);
@@ -95,6 +103,12 @@ export function NewProjectForm() {
           ))}
         </div>
       </div>
+      <PortPicker
+        icon={portIcon}
+        color={portColor}
+        onIconChange={setPortIcon}
+        onColorChange={setPortColor}
+      />
       <div className="flex gap-2">
         <button
           type="submit"

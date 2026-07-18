@@ -2,6 +2,10 @@ export type TaskStatus = "todo" | "in_progress" | "done";
 
 export type TaskLabel = "bug" | "feature" | "docs" | "urgent" | "design";
 
+export type PortIcon = "helm" | "anchor" | "sailboat" | "waves" | "flag" | "compass";
+
+export type PortColor = "blue" | "cyan" | "teal" | "emerald" | "amber" | "rose" | "slate";
+
 export interface Project {
   id: string;
   name: string;
@@ -11,7 +15,31 @@ export interface Project {
   memberEmails: string[];
   archived: boolean;
   createdAt: number;
+  portIcon?: PortIcon | null;
+  portColor?: PortColor | null;
 }
+
+export const PORT_ICONS: { value: PortIcon; label: string }[] = [
+  { value: "compass", label: "Compass" },
+  { value: "helm", label: "Helm" },
+  { value: "anchor", label: "Anchor" },
+  { value: "sailboat", label: "Sailboat" },
+  { value: "waves", label: "Waves" },
+  { value: "flag", label: "Flag" },
+];
+
+export const PORT_COLORS: { value: PortColor; badge: string; dot: string }[] = [
+  { value: "blue", badge: "bg-blue-100 text-blue-700", dot: "bg-blue-500" },
+  { value: "cyan", badge: "bg-cyan-100 text-cyan-700", dot: "bg-cyan-500" },
+  { value: "teal", badge: "bg-teal-100 text-teal-700", dot: "bg-teal-500" },
+  { value: "emerald", badge: "bg-emerald-100 text-emerald-700", dot: "bg-emerald-500" },
+  { value: "amber", badge: "bg-amber-100 text-amber-700", dot: "bg-amber-500" },
+  { value: "rose", badge: "bg-rose-100 text-rose-700", dot: "bg-rose-500" },
+  { value: "slate", badge: "bg-slate-100 text-slate-700", dot: "bg-slate-500" },
+];
+
+export const DEFAULT_PORT_ICON: PortIcon = "compass";
+export const DEFAULT_PORT_COLOR: PortColor = "blue";
 
 export interface Task {
   id: string;

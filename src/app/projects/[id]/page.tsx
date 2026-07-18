@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Confetti } from "@/components/Confetti";
 import { Navbar } from "@/components/Navbar";
 import { NewTaskForm } from "@/components/NewTaskForm";
+import { PortBadge } from "@/components/PortBadge";
 import { RequireAuth } from "@/components/RequireAuth";
 import { TaskCard } from "@/components/TaskCard";
 import { Toast } from "@/components/Toast";
@@ -82,11 +83,14 @@ function BoardContent({ projectId }: { projectId: string }) {
       <Confetti trigger={celebration} />
       <Toast message={toastMessage} trigger={toastKey} />
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-blue-950">{project.name}</h1>
-          {project.description && (
-            <p className="text-sm text-neutral-500">{project.description}</p>
-          )}
+        <div className="flex items-center gap-3">
+          <PortBadge project={project} size="md" />
+          <div>
+            <h1 className="text-2xl font-bold text-blue-950">{project.name}</h1>
+            {project.description && (
+              <p className="text-sm text-neutral-500">{project.description}</p>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Link

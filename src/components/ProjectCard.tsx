@@ -3,14 +3,19 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { addProjectMember, subscribeToProjectTasks, updateProject } from "@/lib/firestore";
-import type { Project, Task } from "@/lib/types";
+import { DEFAULT_PORT_COLOR, DEFAULT_PORT_ICON } from "@/lib/types";
+import type { PortColor, PortIcon, Project, Task } from "@/lib/types";
 import { Avatar } from "./Avatar";
+import { PortBadge } from "./PortBadge";
+import { PortPicker } from "./PortPicker";
 
 export function ProjectCard({ project }: { project: Project }) {
   const [memberEmail, setMemberEmail] = useState("");
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description);
+  const [portIcon, setPortIcon] = useState<PortIcon>(project.portIcon ?? DEFAULT_PORT_ICON);
+  const [portColor, setPortColor] = useState<PortColor>(project.portColor ?? DEFAULT_PORT_COLOR);
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => subscribeToProjectTasks(project.id, setTasks), [project.id]);
@@ -28,7 +33,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
   async function handleSaveEdit(e: React.FormEvent) {
     e.preventDefault();
-    await updateProject(project.id, { name, description });
+    await updateProject(project.id, { name, description, portIcon, portColor });
     setEditing(false);
   }
 
@@ -49,6 +54,12 @@ export function ProjectCard({ project }: { project: Project }) {
               rows={2}
               className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm"
             />
+            <PortPicker
+              icon={portIcon}
+              color={portColor}
+              onIconChange={setPortIcon}
+              onColorChange={setPortColor}
+            />
             <div className="flex gap-2">
               <button
                 type="submit"
@@ -61,6 +72,8 @@ export function ProjectCard({ project }: { project: Project }) {
                 onClick={() => {
                   setName(project.name);
                   setDescription(project.description);
+                  setPortIcon(project.portIcon ?? DEFAULT_PORT_ICON);
+                  setPortColor(project.portColor ?? DEFAULT_PORT_COLOR);
                   setEditing(false);
                 }}
                 className="rounded-md border border-neutral-300 px-2 py-1 text-xs"
@@ -70,16 +83,19 @@ export function ProjectCard({ project }: { project: Project }) {
             </div>
           </form>
         ) : (
-          <div>
-            <Link
-              href={`/projects/${project.id}`}
-              className="font-semibold text-blue-950 hover:text-blue-700 hover:underline"
-            >
-              {project.name}
-            </Link>
-            {project.description && (
-              <p className="text-sm text-neutral-500">{project.description}</p>
-            )}
+          <div className="flex items-start gap-3">
+            <PortBadge project={project} />
+            <div>
+              <Link
+                href={`/projects/${project.id}`}
+                className="font-semibold text-blue-950 hover:text-blue-700 hover:underline"
+              >
+                {project.name}
+              </Link>
+              {project.description && (
+                <p className="text-sm text-neutral-500">{project.description}</p>
+              )}
+            </div>
           </div>
         )}
 

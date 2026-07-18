@@ -9,7 +9,16 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { ChecklistItem, Comment, Project, Task, TaskLabel, TaskStatus } from "./types";
+import type {
+  ChecklistItem,
+  Comment,
+  PortColor,
+  PortIcon,
+  Project,
+  Task,
+  TaskLabel,
+  TaskStatus,
+} from "./types";
 
 const projectsRef = collection(db, "projects");
 
@@ -30,6 +39,8 @@ export async function createProject(params: {
   description: string;
   ownerId: string;
   ownerEmail: string;
+  portIcon?: PortIcon;
+  portColor?: PortColor;
 }) {
   return addDoc(projectsRef, {
     name: params.name,
@@ -39,6 +50,8 @@ export async function createProject(params: {
     memberEmails: [params.ownerEmail],
     archived: false,
     createdAt: Date.now(),
+    portIcon: params.portIcon ?? null,
+    portColor: params.portColor ?? null,
   });
 }
 
