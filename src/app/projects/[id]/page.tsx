@@ -105,6 +105,12 @@ function BoardContent({ projectId }: { projectId: string }) {
           >
             Insights
           </Link>
+          <Link
+            href={`/projects/${projectId}/crew`}
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
+          >
+            Crew
+          </Link>
           <NewTaskForm
             projectId={projectId}
             memberEmails={project.memberEmails}
