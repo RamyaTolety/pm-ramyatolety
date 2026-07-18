@@ -54,6 +54,13 @@ a due date, so the board, filters, and Focus widget all have real data on first 
 - **Voyage Log**: a per-project activity timeline — tasks created/completed, comments, checklist items checked off — assembled chronologically from real data, not a synthetic feed
 - A completion toast alongside the confetti when you finish a task
 - Cross-project "My Tasks" view, filterable by project, status, and assignee
+- **First-voyage onboarding carousel**: a 3-slide animated welcome sequence shown once right after sign-up, gated on a per-uid localStorage flag set at signup time so existing users never see it retroactively
+- **Anchor Watch**: a muted badge on a task card when it's sat in To Do for more than 3 days, separate from the due-date badge since it's informational rather than urgent
+- **Port customization**: pick an accent icon and color ("port") for a project at creation or via Edit; reflected on the project card and the board header
+- **Crew roster page** (`/projects/[id]/crew`): per-member stats — tasks assigned, completed, and completion rate — reusing the same aggregation approach as the Insights "By assignee" breakdown
+- **7-day weather forecast** on the Insights page: the Conditions indicator extended into a row of 7 day-icons, each colored by the same Smooth sailing/Choppy waters/Storm warning thresholds applied to that day's due-task load against recent throughput
+- **Route Timeline** (`/projects/[id]/timeline`): due-dated tasks plotted like ports of call along a horizontal line, colored by status with a distinct overdue color; view-only for this first pass
+- **Night Watch**: a dark-navy theme toggle in the navbar, class-based Tailwind dark mode persisted in localStorage
 
 ## Local setup
 
@@ -97,3 +104,9 @@ Stated plainly rather than left for a reviewer to find:
 - **Drag-and-drop is unverified by automated testing.** It's standard HTML5 `dragstart`/`dragover`/`drop`, but browser-automation tools can't simulate native drag events, so this was checked by code review, not a live test. The status dropdown is a fully-tested fallback for the same action.
 - **Any project member can remove any other member** from `memberEmails` (including the owner) — collaborative-editing tradeoff, not currently restricted to the owner. `ownerEmail` itself is protected (see Architecture).
 - **Any project member can delete any task**, not just their own or ones they created — intentional for a small trusted cohort team, but worth knowing.
+- **The onboarding carousel is per-device**, not per-account. The "seen it" flag lives in localStorage, keyed by uid, set at signup time — so a user who signs up on one device and later logs into Waypoint on a second device will see the carousel again there. Fine for the cohort's single-device usage pattern, but not a durable "has this account completed onboarding" record.
+- **Anchor Watch's 3-day threshold is fixed**, not configurable per project or team.
+- **Crew roster stats only cover current members.** If someone is removed from a project's `memberEmails`, any tasks still assigned to them drop out of the roster's per-member breakdown (their `assigneeEmail` isn't cleared) — the numbers reflect the current roster, not full history.
+- **The 7-day forecast's thresholds are throughput-relative, not absolute.** With a quiet week (little or no completion history), the average throughput floors to 1, so even a single due task on a slow day can read as "Storm warning." Works as intended for an active board, less intuitive for a brand-new or dormant one.
+- **Route Timeline has no drag-to-reschedule** — view-only for this first pass, as planned. Labels for tasks due very close together may also overlap; the above/below alternation only handles moderate clustering.
+- **Night Watch has no toggle on the login page** — it's only reachable from the navbar after signing in. A previously-saved preference still applies there (no flash of the wrong theme), just no way to change it pre-login. There's also no automatic system-theme detection on first visit; it defaults to light until a user opts in.
