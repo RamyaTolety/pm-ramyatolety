@@ -11,6 +11,16 @@ import type { Project, Task } from "@/lib/types";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+function forecastLevel(dueCount: number, ratio: number) {
+  if (dueCount === 0 || ratio <= 1) {
+    return { condition: "Smooth sailing", classes: "bg-emerald-100 text-emerald-700", Icon: SailboatIcon };
+  }
+  if (ratio < 2) {
+    return { condition: "Choppy waters", classes: "bg-amber-100 text-amber-700", Icon: WavesIcon };
+  }
+  return { condition: "Storm warning", classes: "bg-rose-100 text-rose-700", Icon: WavesIcon };
+}
+
 function InsightsContent({ projectId }: { projectId: string }) {
   const [project, setProject] = useState<Project | null | undefined>(undefined);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -101,6 +111,26 @@ function InsightsContent({ projectId }: { projectId: string }) {
     };
   }, [tasks]);
 
+  const forecast = useMemo(() => {
+    const avgThroughput = Math.max(
+      1,
+      dailyCompleted.reduce((sum, d) => sum + d.count, 0) / dailyCompleted.length
+    );
+    return Array.from({ length: 7 }, (_, i) => {
+      const dayStart = new Date();
+      dayStart.setHours(0, 0, 0, 0);
+      dayStart.setDate(dayStart.getDate() + i);
+      const start = dayStart.getTime();
+      const end = start + DAY_MS;
+      const dueCount = tasks.filter(
+        (t) => t.status !== "done" && t.dueDate && t.dueDate >= start && t.dueDate < end
+      ).length;
+      const ratio = dueCount / avgThroughput;
+      const label = i === 0 ? "Today" : dayStart.toLocaleDateString(undefined, { weekday: "short" });
+      return { label, dueCount, ...forecastLevel(dueCount, ratio) };
+    });
+  }, [tasks, dailyCompleted]);
+
   if (project === undefined) {
     return <p className="p-8 text-center text-neutral-500">Loading…</p>;
   }
@@ -128,6 +158,27 @@ function InsightsContent({ projectId }: { projectId: string }) {
           {conditions.label}
         </span>
         <span className="text-sm text-neutral-500">{conditions.note}</span>
+      </div>
+
+      <div className="rounded-xl border border-blue-100 bg-white p-5">
+        <h2 className="mb-3 text-sm font-semibold text-neutral-700">7-day forecast</h2>
+        <div className="grid grid-cols-7 gap-2">
+          {forecast.map((day, i) => (
+            <div
+              key={i}
+              title={`${day.condition} · ${day.dueCount} task${day.dueCount === 1 ? "" : "s"} due`}
+              className="flex flex-col items-center gap-1.5 rounded-lg border border-neutral-100 py-3"
+            >
+              <p className="text-[11px] font-medium text-neutral-500">{day.label}</p>
+              <span className={`flex h-8 w-8 items-center justify-center rounded-full ${day.classes}`}>
+                <day.Icon className="h-4 w-4" />
+              </span>
+              <p className="text-[11px] text-neutral-400">
+                {day.dueCount || "—"}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
