@@ -111,6 +111,12 @@ function BoardContent({ projectId }: { projectId: string }) {
           >
             Crew
           </Link>
+          <Link
+            href={`/projects/${projectId}/timeline`}
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
+          >
+            Route Timeline
+          </Link>
           <NewTaskForm
             projectId={projectId}
             memberEmails={project.memberEmails}
