@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { CommandPalette } from "./CommandPalette";
+import { OnboardingCarousel } from "./OnboardingCarousel";
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -22,6 +23,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   return (
     <>
       <CommandPalette />
+      <OnboardingCarousel />
       {children}
     </>
   );

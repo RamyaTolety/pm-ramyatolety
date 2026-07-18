@@ -118,3 +118,23 @@ export function CompassIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function CrewIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <circle cx="8" cy="8" r="3" />
+      <path d="M2 21v-1a6 6 0 0 1 6-6h0a6 6 0 0 1 6 6v1" />
+      <circle cx="17" cy="7" r="2.5" />
+      <path d="M15.5 13a5 5 0 0 1 5.5 5v1" />
+    </svg>
+  );
+}

@@ -35,7 +35,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     loading,
     signUp: async (email, password) => {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+      localStorage.setItem(`waypoint-onboarding-pending-${credential.user.uid}`, "1");
     },
     logIn: async (email, password) => {
       await signInWithEmailAndPassword(auth, email, password);
