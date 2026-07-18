@@ -1,13 +1,54 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { addProjectMember, subscribeToProjectTasks, updateProject } from "@/lib/firestore";
-import { DEFAULT_PORT_COLOR, DEFAULT_PORT_ICON } from "@/lib/types";
+import { DEFAULT_ANCHOR_WATCH_DAYS, DEFAULT_PORT_COLOR, DEFAULT_PORT_ICON } from "@/lib/types";
 import type { PortColor, PortIcon, Project, Task } from "@/lib/types";
 import { Avatar } from "./Avatar";
+import { AnchorIcon, SailboatIcon, WavesIcon } from "./icons";
 import { PortBadge } from "./PortBadge";
 import { PortPicker } from "./PortPicker";
+
+function conditionsInfo(tasks: Task[]) {
+  const incomplete = tasks.filter((t) => t.status !== "done");
+  if (tasks.length === 0) {
+    return {
+      label: "Calm harbor",
+      classes: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
+      Icon: AnchorIcon,
+    };
+  }
+  if (incomplete.length === 0) {
+    return {
+      label: "Smooth sailing",
+      classes: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+      Icon: SailboatIcon,
+    };
+  }
+  const now = Date.now();
+  const overdue = incomplete.filter((t) => t.dueDate && t.dueDate < now).length;
+  const ratio = overdue / incomplete.length;
+  if (ratio === 0) {
+    return {
+      label: "Smooth sailing",
+      classes: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+      Icon: SailboatIcon,
+    };
+  }
+  if (ratio < 0.34) {
+    return {
+      label: "Choppy waters",
+      classes: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+      Icon: WavesIcon,
+    };
+  }
+  return {
+    label: "Storm warning",
+    classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
+    Icon: WavesIcon,
+  };
+}
 
 export function ProjectCard({ project }: { project: Project }) {
   const [memberEmail, setMemberEmail] = useState("");
@@ -16,12 +57,16 @@ export function ProjectCard({ project }: { project: Project }) {
   const [description, setDescription] = useState(project.description);
   const [portIcon, setPortIcon] = useState<PortIcon>(project.portIcon ?? DEFAULT_PORT_ICON);
   const [portColor, setPortColor] = useState<PortColor>(project.portColor ?? DEFAULT_PORT_COLOR);
+  const [anchorWatchDays, setAnchorWatchDays] = useState(
+    project.anchorWatchDays ?? DEFAULT_ANCHOR_WATCH_DAYS
+  );
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => subscribeToProjectTasks(project.id, setTasks), [project.id]);
 
   const doneCount = tasks.filter((t) => t.status === "done").length;
   const progress = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
+  const conditions = useMemo(() => conditionsInfo(tasks), [tasks]);
 
   async function handleAddMember(e: React.FormEvent) {
     e.preventDefault();
@@ -33,7 +78,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
   async function handleSaveEdit(e: React.FormEvent) {
     e.preventDefault();
-    await updateProject(project.id, { name, description, portIcon, portColor });
+    await updateProject(project.id, { name, description, portIcon, portColor, anchorWatchDays });
     setEditing(false);
   }
 
@@ -60,6 +105,19 @@ export function ProjectCard({ project }: { project: Project }) {
               onIconChange={setPortIcon}
               onColorChange={setPortColor}
             />
+            <div>
+              <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-slate-400">
+                Anchor watch (days)
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={30}
+                value={anchorWatchDays}
+                onChange={(e) => setAnchorWatchDays(Number(e.target.value))}
+                className="w-20 rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+              />
+            </div>
             <div className="flex gap-2">
               <button
                 type="submit"
@@ -74,6 +132,7 @@ export function ProjectCard({ project }: { project: Project }) {
                   setDescription(project.description);
                   setPortIcon(project.portIcon ?? DEFAULT_PORT_ICON);
                   setPortColor(project.portColor ?? DEFAULT_PORT_COLOR);
+                  setAnchorWatchDays(project.anchorWatchDays ?? DEFAULT_ANCHOR_WATCH_DAYS);
                   setEditing(false);
                 }}
                 className="rounded-md border border-neutral-300 px-2 py-1 text-xs dark:border-slate-600 dark:text-slate-300"
@@ -116,6 +175,13 @@ export function ProjectCard({ project }: { project: Project }) {
           </div>
         )}
       </div>
+
+      <span
+        className={`inline-flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${conditions.classes}`}
+      >
+        <conditions.Icon className="h-3 w-3" />
+        {conditions.label}
+      </span>
 
       {tasks.length > 0 && (
         <div className="space-y-1">

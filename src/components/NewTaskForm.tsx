@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import { createTask } from "@/lib/firestore";
-import type { TaskLabel } from "@/lib/types";
-import { TASK_LABELS } from "@/lib/types";
+import type { TaskLabel, TaskPriority, TaskRecurrence } from "@/lib/types";
+import {
+  DEFAULT_TASK_PRIORITY,
+  DEFAULT_TASK_RECURRENCE,
+  TASK_LABELS,
+  TASK_PRIORITIES,
+  TASK_RECURRENCES,
+} from "@/lib/types";
 
 export function NewTaskForm({
   projectId,
@@ -21,6 +27,8 @@ export function NewTaskForm({
   const [assigneeEmail, setAssigneeEmail] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [labels, setLabels] = useState<TaskLabel[]>([]);
+  const [priority, setPriority] = useState<TaskPriority>(DEFAULT_TASK_PRIORITY);
+  const [recurrence, setRecurrence] = useState<TaskRecurrence>(DEFAULT_TASK_RECURRENCE);
   const [submitting, setSubmitting] = useState(false);
 
   function toggleLabel(label: TaskLabel) {
@@ -39,12 +47,16 @@ export function NewTaskForm({
         assigneeEmail: assigneeEmail || null,
         dueDate: dueDate ? new Date(dueDate).getTime() : null,
         labels,
+        priority,
+        recurrence,
       });
       setTitle("");
       setDescription("");
       setAssigneeEmail("");
       setDueDate("");
       setLabels([]);
+      setPriority(DEFAULT_TASK_PRIORITY);
+      setRecurrence(DEFAULT_TASK_RECURRENCE);
       onOpenChange(false);
     } finally {
       setSubmitting(false);
@@ -97,6 +109,44 @@ export function NewTaskForm({
             {l.label}
           </button>
         ))}
+      </div>
+      <div>
+        <p className="mb-1 text-xs font-medium text-neutral-600 dark:text-slate-400">Priority</p>
+        <div className="flex flex-wrap gap-1.5">
+          {TASK_PRIORITIES.map((p) => (
+            <button
+              key={p.value}
+              type="button"
+              onClick={() => setPriority(p.value)}
+              className={`rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
+                priority === p.value
+                  ? p.classes + " ring-transparent"
+                  : "bg-transparent text-neutral-400 ring-neutral-200 dark:text-slate-500 dark:ring-slate-700"
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p className="mb-1 text-xs font-medium text-neutral-600 dark:text-slate-400">Standing watch</p>
+        <div className="flex flex-wrap gap-1.5">
+          {TASK_RECURRENCES.map((r) => (
+            <button
+              key={r.value}
+              type="button"
+              onClick={() => setRecurrence(r.value)}
+              className={`rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
+                recurrence === r.value
+                  ? "bg-blue-600 text-white ring-transparent"
+                  : "bg-transparent text-neutral-400 ring-neutral-200 dark:text-slate-500 dark:ring-slate-700"
+              }`}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="flex gap-2">
         <select

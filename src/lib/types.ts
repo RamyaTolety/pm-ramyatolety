@@ -2,6 +2,10 @@ export type TaskStatus = "todo" | "in_progress" | "done";
 
 export type TaskLabel = "bug" | "feature" | "docs" | "urgent" | "design";
 
+export type TaskPriority = "low" | "medium" | "high" | "urgent";
+
+export type TaskRecurrence = "none" | "daily" | "weekly";
+
 export type PortIcon = "helm" | "anchor" | "sailboat" | "waves" | "flag" | "compass";
 
 export type PortColor = "blue" | "cyan" | "teal" | "emerald" | "amber" | "rose" | "slate";
@@ -17,6 +21,7 @@ export interface Project {
   createdAt: number;
   portIcon?: PortIcon | null;
   portColor?: PortColor | null;
+  anchorWatchDays?: number;
 }
 
 export const PORT_ICONS: { value: PortIcon; label: string }[] = [
@@ -50,6 +55,8 @@ export interface Task {
   assigneeEmail: string | null;
   dueDate: number | null;
   labels: TaskLabel[];
+  priority: TaskPriority;
+  recurrence: TaskRecurrence;
   createdAt: number;
   updatedAt: number;
 }
@@ -76,6 +83,25 @@ export const TASK_LABELS: { value: TaskLabel; label: string; classes: string }[]
   { value: "urgent", label: "Urgent", classes: "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300" },
   { value: "design", label: "Design", classes: "bg-teal-100 text-teal-700 dark:bg-teal-950 dark:text-teal-300" },
 ];
+
+export const TASK_PRIORITIES: { value: TaskPriority; label: string; classes: string }[] = [
+  { value: "low", label: "Low", classes: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300" },
+  { value: "medium", label: "Medium", classes: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300" },
+  { value: "high", label: "High", classes: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300" },
+  { value: "urgent", label: "Urgent", classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300" },
+];
+
+export const DEFAULT_TASK_PRIORITY: TaskPriority = "medium";
+
+export const TASK_RECURRENCES: { value: TaskRecurrence; label: string }[] = [
+  { value: "none", label: "None" },
+  { value: "daily", label: "Daily" },
+  { value: "weekly", label: "Weekly" },
+];
+
+export const DEFAULT_TASK_RECURRENCE: TaskRecurrence = "none";
+
+export const DEFAULT_ANCHOR_WATCH_DAYS = 3;
 
 export const PROJECT_TEMPLATES: {
   value: string;

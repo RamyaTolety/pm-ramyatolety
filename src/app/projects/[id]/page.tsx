@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { Confetti } from "@/components/Confetti";
 import { Navbar } from "@/components/Navbar";
 import { NewTaskForm } from "@/components/NewTaskForm";
@@ -22,9 +22,10 @@ const STATUS_ICONS: Record<TaskStatus, typeof AnchorIcon> = {
 };
 
 function BoardContent({ projectId }: { projectId: string }) {
+  const searchParams = useSearchParams();
   const [project, setProject] = useState<Project | null | undefined>(undefined);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [assigneeFilter, setAssigneeFilter] = useState(searchParams.get("assignee") ?? "");
   const [labelFilter, setLabelFilter] = useState<TaskLabel | "">("");
   const [celebration, setCelebration] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -185,7 +186,13 @@ function BoardContent({ projectId }: { projectId: string }) {
               {filteredTasks
                 .filter((t) => t.status === status.value)
                 .map((task) => (
-                  <TaskCard key={task.id} task={task} onCompleted={celebrate} />
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onCompleted={celebrate}
+                    memberEmails={project.memberEmails}
+                    anchorWatchDays={project.anchorWatchDays}
+                  />
                 ))}
             </div>
           </div>
@@ -201,7 +208,11 @@ export default function ProjectPage() {
   return (
     <RequireAuth>
       <Navbar />
-      <BoardContent projectId={params.id} />
+      <Suspense
+        fallback={<p className="p-8 text-center text-neutral-500 dark:text-slate-400">Loading…</p>}
+      >
+        <BoardContent projectId={params.id} />
+      </Suspense>
     </RequireAuth>
   );
 }

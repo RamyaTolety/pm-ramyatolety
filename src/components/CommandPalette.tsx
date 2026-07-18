@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { subscribeToUserProjects } from "@/lib/firestore";
-import type { Project } from "@/lib/types";
+import { subscribeToProjectTasks, subscribeToUserProjects } from "@/lib/firestore";
+import type { Project, Task } from "@/lib/types";
 
 interface Command {
   id: string;
@@ -13,10 +13,13 @@ interface Command {
   onSelect: () => void;
 }
 
+const MAX_RESULTS = 8;
+
 export function CommandPalette() {
   const { user } = useAuth();
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [tasksByProject, setTasksByProject] = useState<Record<string, Task[]>>({});
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -25,6 +28,15 @@ export function CommandPalette() {
     if (!user?.email) return;
     return subscribeToUserProjects(user.email, setProjects);
   }, [user?.email]);
+
+  useEffect(() => {
+    const unsubscribers = projects.map((project) =>
+      subscribeToProjectTasks(project.id, (tasks) => {
+        setTasksByProject((prev) => ({ ...prev, [project.id]: tasks }));
+      })
+    );
+    return () => unsubscribers.forEach((unsub) => unsub());
+  }, [projects]);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -46,20 +58,27 @@ export function CommandPalette() {
       { id: "dashboard", label: "Go to Dashboard", hint: "Projects", onSelect: () => router.push("/dashboard") },
       { id: "my-tasks", label: "Go to My Tasks", hint: "Cross-project", onSelect: () => router.push("/my-tasks") },
     ];
-    const projectCommands: Command[] = projects
-      .filter((p) => !p.archived)
-      .map((p) => ({
-        id: p.id,
-        label: `Go to ${p.name}`,
-        hint: "Project",
-        onSelect: () => router.push(`/projects/${p.id}`),
-      }));
-    return [...base, ...projectCommands];
-  }, [projects, router]);
+    const activeProjects = projects.filter((p) => !p.archived);
+    const projectCommands: Command[] = activeProjects.map((p) => ({
+      id: p.id,
+      label: `Go to ${p.name}`,
+      hint: "Project",
+      onSelect: () => router.push(`/projects/${p.id}`),
+    }));
+    const taskCommands: Command[] = activeProjects.flatMap((project) =>
+      (tasksByProject[project.id] ?? []).map((task) => ({
+        id: `task-${task.id}`,
+        label: task.title,
+        hint: project.name,
+        onSelect: () => router.push(`/projects/${project.id}`),
+      }))
+    );
+    return [...base, ...projectCommands, ...taskCommands];
+  }, [projects, tasksByProject, router]);
 
-  const filtered = commands.filter((c) =>
-    c.label.toLowerCase().includes(query.toLowerCase())
-  );
+  const filtered = commands
+    .filter((c) => c.label.toLowerCase().includes(query.toLowerCase()))
+    .slice(0, MAX_RESULTS);
 
   function handleSelect(command: Command) {
     command.onSelect();
@@ -95,7 +114,7 @@ export function CommandPalette() {
               handleSelect(filtered[activeIndex]);
             }
           }}
-          placeholder="Jump to a project or page…"
+          placeholder="Jump to a project, page, or leg…"
           className="w-full border-b border-neutral-100 px-4 py-3 text-sm focus:outline-none dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
         />
         <div className="max-h-72 overflow-y-auto py-1">

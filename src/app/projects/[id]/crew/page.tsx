@@ -19,12 +19,32 @@ function CrewContent({ projectId }: { projectId: string }) {
 
   const roster = useMemo(() => {
     if (!project) return [];
-    return project.memberEmails
+    // Tasks keep their assigneeEmail even after that person is removed from the
+    // project's memberEmails, so build the roster from the union of current
+    // members and any assignee still showing up on a task — otherwise their
+    // historical stats silently vanish from the breakdown.
+    const memberSet = new Set(project.memberEmails);
+    const formerAssigneeEmails = Array.from(
+      new Set(
+        tasks
+          .map((t) => t.assigneeEmail)
+          .filter((email): email is string => !!email && !memberSet.has(email))
+      )
+    );
+    const allEmails = [...project.memberEmails, ...formerAssigneeEmails];
+
+    return allEmails
       .map((email) => {
         const assigned = tasks.filter((t) => t.assigneeEmail === email);
         const completed = assigned.filter((t) => t.status === "done");
         const rate = assigned.length ? Math.round((completed.length / assigned.length) * 100) : 0;
-        return { email, assignedCount: assigned.length, completedCount: completed.length, rate };
+        return {
+          email,
+          assignedCount: assigned.length,
+          completedCount: completed.length,
+          rate,
+          isFormerMember: !memberSet.has(email),
+        };
       })
       .sort((a, b) => b.assignedCount - a.assignedCount);
   }, [project, tasks]);
@@ -59,11 +79,20 @@ function CrewContent({ projectId }: { projectId: string }) {
         </h2>
         <div className="space-y-4">
           {roster.map((member) => (
-            <div key={member.email} className="flex items-center gap-3">
+            <Link
+              key={member.email}
+              href={`/projects/${projectId}?assignee=${encodeURIComponent(member.email)}`}
+              className="-mx-2 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-blue-50 dark:hover:bg-slate-800"
+            >
               <Avatar email={member.email} size="md" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-neutral-800 dark:text-slate-200">
                   {member.email}
+                  {member.isFormerMember && (
+                    <span className="ml-1.5 text-xs font-normal text-neutral-400 dark:text-slate-500">
+                      (former member)
+                    </span>
+                  )}
                 </p>
                 <div className="mt-1 flex items-center gap-2">
                   <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-100 dark:bg-slate-800">
@@ -91,7 +120,7 @@ function CrewContent({ projectId }: { projectId: string }) {
                   <p>done</p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {unassignedCount > 0 && (

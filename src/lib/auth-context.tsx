@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "./firebase";
+import { markIntroPending } from "./user-profile";
 
 interface AuthContextValue {
   user: User | null;
@@ -37,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signUp: async (email, password) => {
       const credential = await createUserWithEmailAndPassword(auth, email, password);
       localStorage.setItem(`waypoint-onboarding-pending-${credential.user.uid}`, "1");
+      markIntroPending(credential.user.uid).catch(() => {});
     },
     logIn: async (email, password) => {
       await signInWithEmailAndPassword(auth, email, password);

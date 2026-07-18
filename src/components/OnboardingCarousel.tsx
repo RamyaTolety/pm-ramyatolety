@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { markIntroSeen, subscribeToUserProfile } from "@/lib/user-profile";
 import { CompassIcon, CrewIcon, FlagIcon } from "./icons";
 
 const SLIDES = [
@@ -36,13 +37,25 @@ export function OnboardingCarousel() {
 
   useEffect(() => {
     if (!user) return;
-    if (localStorage.getItem(pendingKey(user.uid))) {
-      setOpen(true);
-    }
+    return subscribeToUserProfile(user.uid, (hasSeenIntro) => {
+      if (hasSeenIntro === false) {
+        setOpen(true);
+      } else if (hasSeenIntro === true) {
+        setOpen(false);
+      } else {
+        // No profile doc yet, or a permission error because the Firestore
+        // rule for users/{userId} hasn't been published yet — fall back to
+        // the localStorage flag so behavior is unchanged until it's live.
+        setOpen(!!localStorage.getItem(pendingKey(user.uid)));
+      }
+    });
   }, [user]);
 
   function dismiss() {
-    if (user) localStorage.removeItem(pendingKey(user.uid));
+    if (user) {
+      localStorage.removeItem(pendingKey(user.uid));
+      markIntroSeen(user.uid).catch(() => {});
+    }
     setOpen(false);
   }
 

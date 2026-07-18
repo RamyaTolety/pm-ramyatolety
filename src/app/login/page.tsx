@@ -4,7 +4,8 @@ import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { AnchorIcon, SailboatIcon, WavesIcon } from "@/components/icons";
+import { useTheme } from "@/lib/theme-context";
+import { AnchorIcon, MoonIcon, SailboatIcon, WavesIcon } from "@/components/icons";
 
 const ROUTE_STEPS = [
   { label: "Plan the route", detail: "Spin up a project, invite your crew", Icon: AnchorIcon },
@@ -14,6 +15,7 @@ const ROUTE_STEPS = [
 
 export default function LoginPage() {
   const { logIn, signUp } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
@@ -44,7 +46,17 @@ export default function LoginPage() {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-10 px-4 py-12 md:flex-row md:items-stretch md:gap-16">
       <div className="animate-fade-in-up flex max-w-md flex-col justify-center text-center md:text-left">
-        <SailboatIcon className="mx-auto h-10 w-10 text-blue-400 md:mx-0" />
+        <div className="flex items-center justify-center gap-3 md:justify-between">
+          <SailboatIcon className="h-10 w-10 text-blue-400" />
+          <button
+            onClick={toggleTheme}
+            title={theme === "dark" ? "Night Watch: on" : "Night Watch: off"}
+            aria-label="Toggle Night Watch"
+            className="rounded-md border border-neutral-300 p-1.5 hover:bg-neutral-100 dark:border-slate-700 dark:hover:bg-slate-800"
+          >
+            <MoonIcon className="h-4 w-4" />
+          </button>
+        </div>
         <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-blue-500">Waypoint</p>
         <h1 className="mt-2 text-3xl font-bold leading-tight text-blue-950 sm:text-4xl dark:text-blue-100">
           Chart the course.

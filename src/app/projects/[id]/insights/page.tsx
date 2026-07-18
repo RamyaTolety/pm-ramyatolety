@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { Avatar } from "@/components/Avatar";
 import { Navbar } from "@/components/Navbar";
 import { RequireAuth } from "@/components/RequireAuth";
 import { AnchorIcon, SailboatIcon, WavesIcon } from "@/components/icons";
@@ -11,6 +12,16 @@ import type { Project, Task } from "@/lib/types";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+const STATUS_LABEL: Record<Task["status"], string> = {
+  todo: "To Do",
+  in_progress: "In Progress",
+  done: "Done",
+};
+
+// A single due task must never classify worse than "Choppy waters" on its own —
+// avgThroughput floors to 1 when there's little/no completion history, which used
+// to spike the ratio immediately. "Storm warning" now requires genuine pile-up:
+// both a high load ratio AND at least two tasks actually due that day.
 function forecastLevel(dueCount: number, ratio: number) {
   if (dueCount === 0 || ratio <= 1) {
     return {
@@ -19,16 +30,16 @@ function forecastLevel(dueCount: number, ratio: number) {
       Icon: SailboatIcon,
     };
   }
-  if (ratio < 2) {
+  if (ratio >= 2 && dueCount >= 2) {
     return {
-      condition: "Choppy waters",
-      classes: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+      condition: "Storm warning",
+      classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
       Icon: WavesIcon,
     };
   }
   return {
-    condition: "Storm warning",
-    classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
+    condition: "Choppy waters",
+    classes: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
     Icon: WavesIcon,
   };
 }
@@ -36,6 +47,7 @@ function forecastLevel(dueCount: number, ratio: number) {
 function InsightsContent({ projectId }: { projectId: string }) {
   const [project, setProject] = useState<Project | null | undefined>(undefined);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
 
   useEffect(() => subscribeToProject(projectId, setProject), [projectId]);
   useEffect(() => subscribeToProjectTasks(projectId, setTasks), [projectId]);
@@ -139,9 +151,18 @@ function InsightsContent({ projectId }: { projectId: string }) {
       ).length;
       const ratio = dueCount / avgThroughput;
       const label = i === 0 ? "Today" : dayStart.toLocaleDateString(undefined, { weekday: "short" });
-      return { label, dueCount, ...forecastLevel(dueCount, ratio) };
+      return { label, dueCount, start, end, ...forecastLevel(dueCount, ratio) };
     });
   }, [tasks, dailyCompleted]);
+
+  const tasksForSelectedDay = useMemo(() => {
+    if (selectedDayIndex === null) return [];
+    const day = forecast[selectedDayIndex];
+    if (!day) return [];
+    return tasks.filter(
+      (t) => t.status !== "done" && t.dueDate && t.dueDate >= day.start && t.dueDate < day.end
+    );
+  }, [tasks, forecast, selectedDayIndex]);
 
   if (project === undefined) {
     return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Loading…</p>;
@@ -175,22 +196,62 @@ function InsightsContent({ projectId }: { projectId: string }) {
       <div className="rounded-xl border border-blue-100 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
         <h2 className="mb-3 text-sm font-semibold text-neutral-700 dark:text-slate-300">7-day forecast</h2>
         <div className="grid grid-cols-7 gap-2">
-          {forecast.map((day, i) => (
-            <div
-              key={i}
-              title={`${day.condition} · ${day.dueCount} task${day.dueCount === 1 ? "" : "s"} due`}
-              className="flex flex-col items-center gap-1.5 rounded-lg border border-neutral-100 py-3 dark:border-slate-800"
-            >
-              <p className="text-[11px] font-medium text-neutral-500 dark:text-slate-400">{day.label}</p>
-              <span className={`flex h-8 w-8 items-center justify-center rounded-full ${day.classes}`}>
-                <day.Icon className="h-4 w-4" />
-              </span>
-              <p className="text-[11px] text-neutral-400 dark:text-slate-500">
-                {day.dueCount || "—"}
-              </p>
-            </div>
-          ))}
+          {forecast.map((day, i) => {
+            const selected = selectedDayIndex === i;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setSelectedDayIndex((cur) => (cur === i ? null : i))}
+                title={`${day.condition} · ${day.dueCount} task${day.dueCount === 1 ? "" : "s"} due`}
+                className={`flex cursor-pointer flex-col items-center gap-1.5 rounded-lg border py-3 transition-colors hover:bg-blue-50 dark:hover:bg-slate-800/60 ${
+                  selected
+                    ? "border-blue-400 bg-blue-50 dark:border-blue-500 dark:bg-slate-800/60"
+                    : "border-neutral-100 dark:border-slate-800"
+                }`}
+              >
+                <p className="text-[11px] font-medium text-neutral-500 dark:text-slate-400">{day.label}</p>
+                <span className={`flex h-8 w-8 items-center justify-center rounded-full ${day.classes}`}>
+                  <day.Icon className="h-4 w-4" />
+                </span>
+                <p className="text-[11px] text-neutral-400 dark:text-slate-500">
+                  {day.dueCount || "—"}
+                </p>
+              </button>
+            );
+          })}
         </div>
+
+        {selectedDayIndex !== null && forecast[selectedDayIndex] && (
+          <div className="mt-4 rounded-xl border border-blue-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+            <h3 className="mb-3 text-xs font-semibold text-neutral-600 dark:text-slate-400">
+              Due {forecast[selectedDayIndex].label}
+            </h3>
+            {tasksForSelectedDay.length === 0 ? (
+              <p className="text-sm text-neutral-400 dark:text-slate-500">No legs due this day.</p>
+            ) : (
+              <div className="space-y-2">
+                {tasksForSelectedDay.map((task) => (
+                  <div key={task.id} className="flex items-center gap-2.5 text-sm">
+                    {task.assigneeEmail ? (
+                      <Avatar email={task.assigneeEmail} size="sm" />
+                    ) : (
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-[10px] font-semibold text-neutral-500 dark:bg-slate-700 dark:text-slate-400">
+                        —
+                      </span>
+                    )}
+                    <span className="flex-1 truncate text-neutral-700 dark:text-slate-300">
+                      {task.title}
+                    </span>
+                    <span className="shrink-0 text-xs text-neutral-400 dark:text-slate-500">
+                      {STATUS_LABEL[task.status]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">

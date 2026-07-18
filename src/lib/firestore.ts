@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   onSnapshot,
   orderBy,
@@ -17,8 +18,14 @@ import type {
   Project,
   Task,
   TaskLabel,
+  TaskPriority,
+  TaskRecurrence,
   TaskStatus,
 } from "./types";
+import { DEFAULT_TASK_PRIORITY, DEFAULT_TASK_RECURRENCE } from "./types";
+
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const ONE_WEEK_MS = 7 * ONE_DAY_MS;
 
 const projectsRef = collection(db, "projects");
 
@@ -92,6 +99,8 @@ export async function createTask(
     assigneeEmail: string | null;
     dueDate: number | null;
     labels: TaskLabel[];
+    priority?: TaskPriority;
+    recurrence?: TaskRecurrence;
   }
 ) {
   const tasksRef = collection(db, "projects", projectId, "tasks");
@@ -102,6 +111,8 @@ export async function createTask(
     assigneeEmail: params.assigneeEmail,
     dueDate: params.dueDate,
     labels: params.labels,
+    priority: params.priority ?? DEFAULT_TASK_PRIORITY,
+    recurrence: params.recurrence ?? DEFAULT_TASK_RECURRENCE,
     createdAt: Date.now(),
     updatedAt: Date.now(),
   });
@@ -116,11 +127,47 @@ export async function updateTask(
   projectId: string,
   taskId: string,
   updates: Partial<
-    Pick<Task, "title" | "description" | "assigneeEmail" | "status" | "dueDate" | "labels">
+    Pick<
+      Task,
+      | "title"
+      | "description"
+      | "assigneeEmail"
+      | "status"
+      | "dueDate"
+      | "labels"
+      | "priority"
+      | "recurrence"
+    >
   >
 ) {
   const taskRef = doc(db, "projects", projectId, "tasks", taskId);
   return updateDoc(taskRef, { ...updates, updatedAt: Date.now() });
+}
+
+export async function deleteTask(projectId: string, taskId: string) {
+  const taskRef = doc(db, "projects", projectId, "tasks", taskId);
+  return deleteDoc(taskRef);
+}
+
+/**
+ * Marks a task done and, if it's a recurring "standing watch" task, spawns a
+ * fresh follow-up task in the same project with the next due date computed
+ * from the recurrence interval.
+ */
+export async function completeTask(projectId: string, task: Task) {
+  await updateTaskStatus(projectId, task.id, "done");
+  if (task.recurrence && task.recurrence !== "none") {
+    const intervalMs = task.recurrence === "daily" ? ONE_DAY_MS : ONE_WEEK_MS;
+    await createTask(projectId, {
+      title: task.title,
+      description: task.description,
+      assigneeEmail: task.assigneeEmail,
+      dueDate: (task.dueDate ?? Date.now()) + intervalMs,
+      labels: task.labels,
+      priority: task.priority ?? DEFAULT_TASK_PRIORITY,
+      recurrence: task.recurrence,
+    });
+  }
 }
 
 export function subscribeToComments(

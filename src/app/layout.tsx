@@ -4,7 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { ThemeProvider } from "@/lib/theme-context";
 
-const themeInitScript = `try{if(localStorage.getItem("waypoint-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}`;
+const themeInitScript = `try{var s=localStorage.getItem("waypoint-theme");if(s==="dark"||(s===null&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
