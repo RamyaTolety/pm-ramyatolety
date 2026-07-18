@@ -5,8 +5,11 @@ import { updateTaskStatus } from "@/lib/firestore";
 import type { Task, TaskStatus } from "@/lib/types";
 import { TASK_LABELS, TASK_STATUSES } from "@/lib/types";
 import { Avatar } from "./Avatar";
+import { AnchorIcon } from "./icons";
 import { TaskChecklist } from "./TaskChecklist";
 import { TaskComments } from "./TaskComments";
+
+const ANCHOR_WATCH_DAYS = 3;
 
 function dueDateInfo(dueDate: number | null) {
   if (!dueDate) return null;
@@ -23,6 +26,13 @@ function dueDateInfo(dueDate: number | null) {
   return { label: `Due ${label}`, classes: "bg-neutral-100 text-neutral-500" };
 }
 
+function anchorWatchInfo(task: Task) {
+  if (task.status !== "todo") return null;
+  const daysSinceCreated = Math.floor((Date.now() - task.createdAt) / 86_400_000);
+  if (daysSinceCreated <= ANCHOR_WATCH_DAYS) return null;
+  return { label: `Anchored ${daysSinceCreated}d` };
+}
+
 export function TaskCard({
   task,
   onCompleted,
@@ -34,6 +44,7 @@ export function TaskCard({
   const [showChecklist, setShowChecklist] = useState(false);
   const status = TASK_STATUSES.find((s) => s.value === task.status);
   const due = dueDateInfo(task.dueDate);
+  const anchorWatch = anchorWatchInfo(task);
 
   function handleStatusChange(next: TaskStatus) {
     updateTaskStatus(task.projectId, task.id, next);
@@ -76,6 +87,15 @@ export function TaskCard({
         {due && (
           <span className={`rounded-full px-1.5 py-0.5 text-[11px] font-medium ${due.classes}`}>
             {due.label}
+          </span>
+        )}
+        {anchorWatch && (
+          <span
+            title="Sitting in To Do for a while"
+            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-500"
+          >
+            <AnchorIcon className="h-2.5 w-2.5" />
+            {anchorWatch.label}
           </span>
         )}
       </div>
