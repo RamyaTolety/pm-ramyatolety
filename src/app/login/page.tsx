@@ -14,7 +14,7 @@ const ROUTE_STEPS = [
 ];
 
 export default function LoginPage() {
-  const { logIn, signUp } = useAuth();
+  const { logIn, signUp, logInAsGuest } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [guestSubmitting, setGuestSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,6 +41,21 @@ export default function LoginPage() {
       setError(message);
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleGuestLogin() {
+    setError(null);
+    setGuestSubmitting(true);
+    try {
+      await logInAsGuest();
+      router.push("/dashboard");
+    } catch (err) {
+      const message =
+        err instanceof FirebaseError ? err.message.replace("Firebase: ", "") : "Something went wrong";
+      setError(message);
+    } finally {
+      setGuestSubmitting(false);
     }
   }
 
@@ -136,6 +152,24 @@ export default function LoginPage() {
         >
           {mode === "login" ? "Need an account? Sign up" : "Already have an account? Log in"}
         </button>
+
+        <div className="flex items-center gap-3 text-xs text-neutral-400 dark:text-slate-500">
+          <div className="h-px flex-1 bg-neutral-200 dark:bg-slate-700" />
+          or
+          <div className="h-px flex-1 bg-neutral-200 dark:bg-slate-700" />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGuestLogin}
+          disabled={guestSubmitting}
+          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm font-medium text-neutral-700 transition hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
+        >
+          {guestSubmitting ? "Boarding…" : "Continue as Guest"}
+        </button>
+        <p className="text-center text-[11px] text-neutral-400 dark:text-slate-500">
+          Explores a shared demo project — no signup needed. Since it's shared, other guests may see the same data.
+        </p>
       </form>
     </div>
   );
