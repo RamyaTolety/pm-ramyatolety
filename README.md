@@ -12,15 +12,19 @@ theme follows suit: a light-blue sky/ocean gradient, a ship's helm mark, and nau
 
 ## Reviewer login
 
-No need to sign up — use the seeded account to explore immediately:
+Fastest option: click **Continue as Guest** on the login page — no typing required.
+
+Or use the same seeded account directly:
 
 ```
 Email:    ramyat500+test1@gmail.com
 Password: testpass123
 ```
 
-It already owns a project ("Cohort Sprint Board") with tasks in each status, a comment thread, and
-a due date, so the board, filters, and Focus widget all have real data on first load.
+Both paths land you on the same account, which already owns a project ("Cohort Sprint Board") with
+tasks in each status, a comment thread, and a due date, so the board, filters, and Focus widget all
+have real data on first load. Note this is a single shared demo account, not an isolated sandbox —
+see Known limitations.
 
 ## Architecture
 
@@ -38,7 +42,7 @@ a due date, so the board, filters, and Focus widget all have real data on first 
 
 ## Features
 
-- Email/password auth, unlimited accounts
+- Email/password auth, unlimited accounts, plus a one-click **Continue as Guest** option on the login page that signs into the shared seeded demo account (see Known limitations for what "shared" means here)
 - Create / edit / archive projects, ≥1 project per user
 - Add cohort members to a project by email (grants task assignment + board access)
 - Tasks with title, description, status (todo / in progress / done), assignee, priority (Low/Medium/High/Urgent), optional due date with overdue/due-soon color badges, and optional recurrence — fully editable after creation (title/description/assignee/due date/labels/priority/recurrence), and deletable, both from the task card
@@ -84,6 +88,8 @@ a due date, so the board, filters, and Focus widget all have real data on first 
 
 ## Deployment
 
+**Live at:** https://waypoint-cohort.vercel.app
+
 Deployed on Vercel with the same environment variables set as project env vars. Firestore data persists independently of the app deployment, so redeploys don't affect existing projects/tasks. Deploys currently run via `vercel --prod`; a GitHub-triggered auto-deploy hasn't been wired up yet.
 
 ## Seeding test accounts
@@ -118,3 +124,4 @@ Stated plainly rather than left for a reviewer to find:
   Add this as a sibling to the existing `match /projects/{projectId}` block in `firestore.rules`, inside the same `match /databases/{database}/documents { ... }` wrapper, then publish via the Firebase console.
 - **Recurring tasks only regenerate on-open.** A "standing watch" task's successor is spawned client-side the moment someone marks the current instance done — there's no server-side cron, so a recurring task with nobody around to complete it simply stays open past its due date rather than auto-advancing on a schedule.
 - **@mention autocomplete matches on email substring only** — there's no display-name field to search, so mentioning someone means typing enough of their actual email to disambiguate.
+- **"Continue as Guest" is a shared demo account, not an isolated per-visitor sandbox.** It signs into the same seeded reviewer account documented above — every guest sees and can modify the same data, concurrently. This was a deliberate simplicity tradeoff: the app's entire data model (project membership, task assignment) is keyed on real email addresses, so true anonymous per-visitor isolation would need Firebase Anonymous Auth, a Firestore rules update, and a compatibility layer for members/assignees without real emails — a bigger change than the guest button itself.
