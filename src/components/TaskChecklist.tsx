@@ -26,16 +26,16 @@ export function TaskChecklist({ projectId, taskId }: { projectId: string; taskId
   const doneCount = items.filter((i) => i.done).length;
 
   return (
-    <div className="space-y-1.5 border-t border-neutral-100 pt-2">
+    <div className="space-y-1.5 border-t border-neutral-100 pt-2 dark:border-slate-800">
       {items.length > 0 && (
         <div className="space-y-1">
-          <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-100">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-slate-800">
             <div
               className="h-full rounded-full bg-blue-500 transition-all"
               style={{ width: `${(doneCount / items.length) * 100}%` }}
             />
           </div>
-          <p className="text-[11px] text-neutral-400">
+          <p className="text-[11px] text-neutral-400 dark:text-slate-500">
             {doneCount}/{items.length} checked off
           </p>
         </div>
@@ -47,7 +47,13 @@ export function TaskChecklist({ projectId, taskId }: { projectId: string; taskId
             checked={item.done}
             onChange={(e) => toggleChecklistItem(projectId, taskId, item.id, e.target.checked)}
           />
-          <span className={item.done ? "text-neutral-400 line-through" : "text-neutral-700"}>
+          <span
+            className={
+              item.done
+                ? "text-neutral-400 line-through dark:text-slate-500"
+                : "text-neutral-700 dark:text-slate-300"
+            }
+          >
             {item.text}
           </span>
         </label>
@@ -57,12 +63,12 @@ export function TaskChecklist({ projectId, taskId }: { projectId: string; taskId
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Add a checklist item…"
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         />
         <button
           type="submit"
           disabled={submitting || !text.trim()}
-          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50"
+          className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
         >
           Add
         </button>

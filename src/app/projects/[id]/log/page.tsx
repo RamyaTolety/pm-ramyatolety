@@ -44,36 +44,43 @@ function LogContent({ projectId }: { projectId: string }) {
   useEffect(() => subscribeToProject(projectId, setProject), [projectId]);
 
   if (project === undefined) {
-    return <p className="p-8 text-center text-neutral-500">Loading…</p>;
+    return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Loading…</p>;
   }
   if (project === null) {
-    return <p className="p-8 text-center text-neutral-500">Project not found.</p>;
+    return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Project not found.</p>;
   }
 
   return (
     <div className="animate-fade-in-up mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8">
       <div>
-        <Link href={`/projects/${projectId}`} className="text-sm text-blue-600 hover:underline">
+        <Link
+          href={`/projects/${projectId}`}
+          className="text-sm text-blue-600 hover:underline dark:text-blue-400"
+        >
           ← Back to board
         </Link>
-        <h1 className="mt-1 text-2xl font-bold text-blue-950">{project.name} · Voyage Log</h1>
-        <p className="text-sm text-neutral-500">Every leg of the journey, in order.</p>
+        <h1 className="mt-1 text-2xl font-bold text-blue-950 dark:text-blue-100">
+          {project.name} · Voyage Log
+        </h1>
+        <p className="text-sm text-neutral-500 dark:text-slate-400">Every leg of the journey, in order.</p>
       </div>
 
       {events.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center">
-          <WavesIcon className="mx-auto h-8 w-8 text-blue-300" />
-          <p className="mt-2 text-sm text-neutral-600">Nothing logged yet — create a task to start the voyage.</p>
+        <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center dark:border-slate-700 dark:bg-slate-900/40">
+          <WavesIcon className="mx-auto h-8 w-8 text-blue-300 dark:text-slate-600" />
+          <p className="mt-2 text-sm text-neutral-600 dark:text-slate-400">
+            Nothing logged yet — create a task to start the voyage.
+          </p>
         </div>
       ) : (
-        <ol className="space-y-4 border-l border-blue-200 pl-5">
+        <ol className="space-y-4 border-l border-blue-200 pl-5 dark:border-slate-700">
           {events.map((event) => (
             <li key={event.id} className="relative">
               <span
                 className={`absolute -left-[26px] top-1.5 h-2.5 w-2.5 rounded-full ${eventDot(event)}`}
               />
-              <p className="text-sm text-neutral-800">{eventCopy(event)}</p>
-              <p className="text-xs text-neutral-400">
+              <p className="text-sm text-neutral-800 dark:text-slate-200">{eventCopy(event)}</p>
+              <p className="text-xs text-neutral-400 dark:text-slate-500">
                 {new Date(event.at).toLocaleString(undefined, {
                   month: "short",
                   day: "numeric",

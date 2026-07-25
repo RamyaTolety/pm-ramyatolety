@@ -30,11 +30,11 @@ function DashboardContent() {
       <FocusCard focusTask={focusTask} shippedThisWeek={shippedThisWeek} />
 
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-950">Your projects</h1>
+        <h1 className="text-2xl font-bold text-blue-950 dark:text-blue-100">Your projects</h1>
         <NewProjectForm />
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-neutral-600">
+      <label className="flex items-center gap-2 text-sm text-neutral-600 dark:text-slate-400">
         <input
           type="checkbox"
           checked={showArchived}
@@ -44,13 +44,13 @@ function DashboardContent() {
       </label>
 
       {visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center">
+        <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/40 p-8 text-center dark:border-slate-700 dark:bg-slate-900/40">
           {showArchived ? (
-            <AnchorIcon className="mx-auto h-8 w-8 text-blue-300" />
+            <AnchorIcon className="mx-auto h-8 w-8 text-blue-300 dark:text-slate-600" />
           ) : (
-            <SailboatIcon className="mx-auto h-8 w-8 text-blue-300" />
+            <SailboatIcon className="mx-auto h-8 w-8 text-blue-300 dark:text-slate-600" />
           )}
-          <p className="mt-2 text-sm text-neutral-600">
+          <p className="mt-2 text-sm text-neutral-600 dark:text-slate-400">
             {showArchived
               ? "No archived projects — anything you archive shows up here."
               : "No projects yet. Create your first one and chart the course."}

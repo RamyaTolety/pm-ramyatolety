@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { Confetti } from "@/components/Confetti";
 import { Navbar } from "@/components/Navbar";
 import { NewTaskForm } from "@/components/NewTaskForm";
+import { PortBadge } from "@/components/PortBadge";
 import { RequireAuth } from "@/components/RequireAuth";
 import { TaskCard } from "@/components/TaskCard";
 import { Toast } from "@/components/Toast";
@@ -21,9 +22,10 @@ const STATUS_ICONS: Record<TaskStatus, typeof AnchorIcon> = {
 };
 
 function BoardContent({ projectId }: { projectId: string }) {
+  const searchParams = useSearchParams();
   const [project, setProject] = useState<Project | null | undefined>(undefined);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [assigneeFilter, setAssigneeFilter] = useState(searchParams.get("assignee") ?? "");
   const [labelFilter, setLabelFilter] = useState<TaskLabel | "">("");
   const [celebration, setCelebration] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -54,10 +56,10 @@ function BoardContent({ projectId }: { projectId: string }) {
   }, []);
 
   if (project === undefined) {
-    return <p className="p-8 text-center text-neutral-500">Loading…</p>;
+    return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Loading…</p>;
   }
   if (project === null) {
-    return <p className="p-8 text-center text-neutral-500">Project not found.</p>;
+    return <p className="p-8 text-center text-neutral-500 dark:text-slate-400">Project not found.</p>;
   }
 
   const filteredTasks = tasks
@@ -82,24 +84,39 @@ function BoardContent({ projectId }: { projectId: string }) {
       <Confetti trigger={celebration} />
       <Toast message={toastMessage} trigger={toastKey} />
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-blue-950">{project.name}</h1>
-          {project.description && (
-            <p className="text-sm text-neutral-500">{project.description}</p>
-          )}
+        <div className="flex items-center gap-3">
+          <PortBadge project={project} size="md" />
+          <div>
+            <h1 className="text-2xl font-bold text-blue-950 dark:text-blue-100">{project.name}</h1>
+            {project.description && (
+              <p className="text-sm text-neutral-500 dark:text-slate-400">{project.description}</p>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href={`/projects/${projectId}/log`}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
           >
             Voyage Log
           </Link>
           <Link
             href={`/projects/${projectId}/insights`}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
           >
             Insights
+          </Link>
+          <Link
+            href={`/projects/${projectId}/crew`}
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
+          >
+            Crew
+          </Link>
+          <Link
+            href={`/projects/${projectId}/timeline`}
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
+          >
+            Route Timeline
           </Link>
           <NewTaskForm
             projectId={projectId}
@@ -111,11 +128,11 @@ function BoardContent({ projectId }: { projectId: string }) {
       </div>
 
       <div className="flex items-center gap-2 text-sm">
-        <label className="text-neutral-600">Filter by assignee:</label>
+        <label className="text-neutral-600 dark:text-slate-400">Filter by assignee:</label>
         <select
           value={assigneeFilter}
           onChange={(e) => setAssigneeFilter(e.target.value)}
-          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         >
           <option value="">Everyone</option>
           {project.memberEmails.map((email) => (
@@ -125,11 +142,11 @@ function BoardContent({ projectId }: { projectId: string }) {
           ))}
         </select>
 
-        <label className="text-neutral-600">Label:</label>
+        <label className="text-neutral-600 dark:text-slate-400">Label:</label>
         <select
           value={labelFilter}
           onChange={(e) => setLabelFilter(e.target.value as TaskLabel | "")}
-          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="rounded-md border border-neutral-300 px-2 py-1 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         >
           <option value="">All labels</option>
           {TASK_LABELS.map((l) => (
@@ -138,9 +155,9 @@ function BoardContent({ projectId }: { projectId: string }) {
             </option>
           ))}
         </select>
-        <span className="ml-auto text-xs text-neutral-400">
-          Drag cards between columns, or press <kbd className="rounded border px-1">n</kbd> for a
-          new task
+        <span className="ml-auto text-xs text-neutral-400 dark:text-slate-500">
+          Drag cards between columns, or press{" "}
+          <kbd className="rounded border px-1 dark:border-slate-600">n</kbd> for a new task
         </span>
       </div>
 
@@ -155,10 +172,10 @@ function BoardContent({ projectId }: { projectId: string }) {
             onDragLeave={() => setDragOverStatus(null)}
             onDrop={(e) => handleDrop(e, status.value)}
             className={`space-y-3 rounded-lg p-2 transition-colors ${
-              dragOverStatus === status.value ? "bg-blue-50" : ""
+              dragOverStatus === status.value ? "bg-blue-50 dark:bg-slate-800/60" : ""
             }`}
           >
-            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600">
+            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600 dark:text-slate-400">
               {(() => {
                 const StatusIcon = STATUS_ICONS[status.value];
                 return <StatusIcon className="h-4 w-4 text-blue-400" />;
@@ -169,7 +186,13 @@ function BoardContent({ projectId }: { projectId: string }) {
               {filteredTasks
                 .filter((t) => t.status === status.value)
                 .map((task) => (
-                  <TaskCard key={task.id} task={task} onCompleted={celebrate} />
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onCompleted={celebrate}
+                    memberEmails={project.memberEmails}
+                    anchorWatchDays={project.anchorWatchDays}
+                  />
                 ))}
             </div>
           </div>
@@ -185,7 +208,11 @@ export default function ProjectPage() {
   return (
     <RequireAuth>
       <Navbar />
-      <BoardContent projectId={params.id} />
+      <Suspense
+        fallback={<p className="p-8 text-center text-neutral-500 dark:text-slate-400">Loading…</p>}
+      >
+        <BoardContent projectId={params.id} />
+      </Suspense>
     </RequireAuth>
   );
 }

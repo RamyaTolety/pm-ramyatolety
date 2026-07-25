@@ -9,12 +9,20 @@ import {
 } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "./firebase";
+import { markIntroPending } from "./user-profile";
+
+// Guest mode signs into the same seeded reviewer account used for staff
+// verification (see README "Reviewer login") — a shared demo account, not a
+// per-visitor sandbox. Guests see and can modify the same shared demo data.
+const GUEST_EMAIL = "ramyat500+test1@gmail.com";
+const GUEST_PASSWORD = "testpass123";
 
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
   signUp: (email: string, password: string) => Promise<void>;
   logIn: (email: string, password: string) => Promise<void>;
+  logInAsGuest: () => Promise<void>;
   logOut: () => Promise<void>;
 }
 
@@ -35,10 +43,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     loading,
     signUp: async (email, password) => {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+      localStorage.setItem(`waypoint-onboarding-pending-${credential.user.uid}`, "1");
+      markIntroPending(credential.user.uid).catch(() => {});
     },
     logIn: async (email, password) => {
       await signInWithEmailAndPassword(auth, email, password);
+    },
+    logInAsGuest: async () => {
+      await signInWithEmailAndPassword(auth, GUEST_EMAIL, GUEST_PASSWORD);
     },
     logOut: async () => {
       await signOut(auth);

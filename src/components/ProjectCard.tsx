@@ -1,22 +1,72 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { addProjectMember, subscribeToProjectTasks, updateProject } from "@/lib/firestore";
-import type { Project, Task } from "@/lib/types";
+import { DEFAULT_ANCHOR_WATCH_DAYS, DEFAULT_PORT_COLOR, DEFAULT_PORT_ICON } from "@/lib/types";
+import type { PortColor, PortIcon, Project, Task } from "@/lib/types";
 import { Avatar } from "./Avatar";
+import { AnchorIcon, SailboatIcon, WavesIcon } from "./icons";
+import { PortBadge } from "./PortBadge";
+import { PortPicker } from "./PortPicker";
+
+function conditionsInfo(tasks: Task[]) {
+  const incomplete = tasks.filter((t) => t.status !== "done");
+  if (tasks.length === 0) {
+    return {
+      label: "Calm harbor",
+      classes: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
+      Icon: AnchorIcon,
+    };
+  }
+  if (incomplete.length === 0) {
+    return {
+      label: "Smooth sailing",
+      classes: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+      Icon: SailboatIcon,
+    };
+  }
+  const now = Date.now();
+  const overdue = incomplete.filter((t) => t.dueDate && t.dueDate < now).length;
+  const ratio = overdue / incomplete.length;
+  if (ratio === 0) {
+    return {
+      label: "Smooth sailing",
+      classes: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+      Icon: SailboatIcon,
+    };
+  }
+  if (ratio < 0.34) {
+    return {
+      label: "Choppy waters",
+      classes: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+      Icon: WavesIcon,
+    };
+  }
+  return {
+    label: "Storm warning",
+    classes: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
+    Icon: WavesIcon,
+  };
+}
 
 export function ProjectCard({ project }: { project: Project }) {
   const [memberEmail, setMemberEmail] = useState("");
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description);
+  const [portIcon, setPortIcon] = useState<PortIcon>(project.portIcon ?? DEFAULT_PORT_ICON);
+  const [portColor, setPortColor] = useState<PortColor>(project.portColor ?? DEFAULT_PORT_COLOR);
+  const [anchorWatchDays, setAnchorWatchDays] = useState(
+    project.anchorWatchDays ?? DEFAULT_ANCHOR_WATCH_DAYS
+  );
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => subscribeToProjectTasks(project.id, setTasks), [project.id]);
 
   const doneCount = tasks.filter((t) => t.status === "done").length;
   const progress = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
+  const conditions = useMemo(() => conditionsInfo(tasks), [tasks]);
 
   async function handleAddMember(e: React.FormEvent) {
     e.preventDefault();
@@ -28,12 +78,12 @@ export function ProjectCard({ project }: { project: Project }) {
 
   async function handleSaveEdit(e: React.FormEvent) {
     e.preventDefault();
-    await updateProject(project.id, { name, description });
+    await updateProject(project.id, { name, description, portIcon, portColor, anchorWatchDays });
     setEditing(false);
   }
 
   return (
-    <div className="animate-fade-in-up space-y-3 rounded-xl border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100/40 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-100/60">
+    <div className="animate-fade-in-up space-y-3 rounded-xl border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100/40 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-100/60 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
       <div className="flex items-start justify-between">
         {editing ? (
           <form onSubmit={handleSaveEdit} className="flex-1 space-y-2 pr-2">
@@ -41,14 +91,33 @@ export function ProjectCard({ project }: { project: Project }) {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm font-semibold"
+              className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm font-semibold dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             />
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm"
+              className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             />
+            <PortPicker
+              icon={portIcon}
+              color={portColor}
+              onIconChange={setPortIcon}
+              onColorChange={setPortColor}
+            />
+            <div>
+              <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-slate-400">
+                Anchor watch (days)
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={30}
+                value={anchorWatchDays}
+                onChange={(e) => setAnchorWatchDays(Number(e.target.value))}
+                className="w-20 rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+              />
+            </div>
             <div className="flex gap-2">
               <button
                 type="submit"
@@ -61,25 +130,31 @@ export function ProjectCard({ project }: { project: Project }) {
                 onClick={() => {
                   setName(project.name);
                   setDescription(project.description);
+                  setPortIcon(project.portIcon ?? DEFAULT_PORT_ICON);
+                  setPortColor(project.portColor ?? DEFAULT_PORT_COLOR);
+                  setAnchorWatchDays(project.anchorWatchDays ?? DEFAULT_ANCHOR_WATCH_DAYS);
                   setEditing(false);
                 }}
-                className="rounded-md border border-neutral-300 px-2 py-1 text-xs"
+                className="rounded-md border border-neutral-300 px-2 py-1 text-xs dark:border-slate-600 dark:text-slate-300"
               >
                 Cancel
               </button>
             </div>
           </form>
         ) : (
-          <div>
-            <Link
-              href={`/projects/${project.id}`}
-              className="font-semibold text-blue-950 hover:text-blue-700 hover:underline"
-            >
-              {project.name}
-            </Link>
-            {project.description && (
-              <p className="text-sm text-neutral-500">{project.description}</p>
-            )}
+          <div className="flex items-start gap-3">
+            <PortBadge project={project} />
+            <div>
+              <Link
+                href={`/projects/${project.id}`}
+                className="font-semibold text-blue-950 hover:text-blue-700 hover:underline dark:text-blue-100 dark:hover:text-blue-300"
+              >
+                {project.name}
+              </Link>
+              {project.description && (
+                <p className="text-sm text-neutral-500 dark:text-slate-400">{project.description}</p>
+              )}
+            </div>
           </div>
         )}
 
@@ -87,13 +162,13 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="flex shrink-0 gap-2">
             <button
               onClick={() => setEditing(true)}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700"
+              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
             >
               Edit
             </button>
             <button
               onClick={() => updateProject(project.id, { archived: !project.archived })}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700"
+              className="rounded-md border border-neutral-300 px-2 py-1 text-xs hover:bg-blue-50 hover:text-blue-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-300"
             >
               {project.archived ? "Unarchive" : "Archive"}
             </button>
@@ -101,15 +176,22 @@ export function ProjectCard({ project }: { project: Project }) {
         )}
       </div>
 
+      <span
+        className={`inline-flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${conditions.classes}`}
+      >
+        <conditions.Icon className="h-3 w-3" />
+        {conditions.label}
+      </span>
+
       {tasks.length > 0 && (
         <div className="space-y-1">
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-blue-100">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-blue-100 dark:bg-slate-800">
             <div
               className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-slate-400">
             {doneCount}/{tasks.length} tasks done · {progress}%
           </p>
         </div>
@@ -127,7 +209,7 @@ export function ProjectCard({ project }: { project: Project }) {
           placeholder="Add member by email"
           value={memberEmail}
           onChange={(e) => setMemberEmail(e.target.value)}
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="flex-1 rounded-md border border-neutral-300 px-2 py-1 text-xs focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-900/40"
         />
         <button
           type="submit"

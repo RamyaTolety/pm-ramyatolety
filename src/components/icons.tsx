@@ -1,3 +1,5 @@
+import type { PortIcon } from "@/lib/types";
+
 type IconProps = { className?: string };
 
 export function HelmIcon({ className }: IconProps) {
@@ -115,6 +117,52 @@ export function CompassIcon({ className }: IconProps) {
     >
       <circle cx="12" cy="12" r="10" />
       <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+    </svg>
+  );
+}
+
+export const PORT_ICON_COMPONENTS: Record<PortIcon, typeof CompassIcon> = {
+  compass: CompassIcon,
+  helm: HelmIcon,
+  anchor: AnchorIcon,
+  sailboat: SailboatIcon,
+  waves: WavesIcon,
+  flag: FlagIcon,
+};
+
+export function MoonIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+    </svg>
+  );
+}
+
+export function CrewIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <circle cx="8" cy="8" r="3" />
+      <path d="M2 21v-1a6 6 0 0 1 6-6h0a6 6 0 0 1 6 6v1" />
+      <circle cx="17" cy="7" r="2.5" />
+      <path d="M15.5 13a5 5 0 0 1 5.5 5v1" />
     </svg>
   );
 }
